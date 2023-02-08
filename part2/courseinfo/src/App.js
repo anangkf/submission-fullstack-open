@@ -52,11 +52,11 @@ const App = () => {
     <div>
       {courses.map(course => {
         return(
-          <>
+          <div key={course.id}>
             <Header course={course}/>
             <Content parts={course.parts}/>
             <Total parts={course.parts}/>
-          </>
+          </div>
         )
       })}
     </div>
