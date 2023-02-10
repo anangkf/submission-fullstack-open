@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import FilterBox from './components/FilterBox';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import noteServices from './services/note';
 
 const INIT_NEW_PERSON = {
   name: '',
@@ -20,17 +20,37 @@ const App = () => {
       [name]: value
     });
   }
-
+  
   const addPerson = (e) => {
     e.preventDefault();
     const isPersonExist = persons.filter(({name}) => name.toLowerCase() === newPerson.name.toLowerCase())
       .length > 0;
-
+    const newID = persons.at(-1).id + 1;
+    
     if(isPersonExist){
-      alert(`${newPerson} is already added to phonebook`);
-    }else{
-      setPersons([...persons, newPerson]);
-      setNewPerson(INIT_NEW_PERSON);
+      const {id} = persons.filter(person => person.name === newPerson.name).at(0);
+      if(
+        window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)
+        ) {
+          noteServices.update({...newPerson, id})
+          .then((data) => {
+            const newData = persons.map(person => {
+              if(person.id === id){
+                return data;
+              }
+              return person;
+            })
+            setPersons(newData);
+            setNewPerson(INIT_NEW_PERSON);
+          })
+        }
+      }else{
+      const newData = {...newPerson, id: newID}
+      noteServices.create(newData)
+        .then(data => {
+          setPersons([...persons, data]);
+          setNewPerson(INIT_NEW_PERSON);
+        })
     }
   }
 
@@ -40,16 +60,28 @@ const App = () => {
     setKeyword(e.target.value.toLowerCase());
   }
 
+  const deletePerson = (person) => {
+    const {name, id} = person;
+    if(window.confirm(`Delete ${name}?`)) {
+      noteServices.delete(person.id)
+      .then(() => {
+        const newData = persons.filter(person => person.id !== id);
+        setPersons(newData);
+        alert(`${name} was deleted successfully!`)
+      })
+    }
+  }
+
   const dataToBeShown = keyword 
     ? persons.filter(({name}) => name.toLowerCase().includes(keyword))
     : persons;
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/persons`)
-      .then(res => {
-        setPersons(res.data)
+    noteServices.getAll()
+      .then(data => {
+        setPersons(data)
       })
-      .catch(err => console.log({err}));
+      .catch(err => console.log(err))
   }, [])
 
   return (
@@ -61,7 +93,7 @@ const App = () => {
       <PersonForm newPerson={newPerson} handleChange={handleChange} addPerson={addPerson} />
       
       <h2>Numbers</h2>
-      <Persons dataToBeShown={dataToBeShown} />
+      <Persons dataToBeShown={dataToBeShown} deletePerson={deletePerson}/>
     </div>
   )
 }
