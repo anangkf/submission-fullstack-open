@@ -26,7 +26,7 @@ const noteServices = {
       const res = await axios.delete(`${baseURL}/${id}`)
       return res;
     } catch (err) {
-      throw new Error(err);
+      throw err;
     }
   },
 

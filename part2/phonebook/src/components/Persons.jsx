@@ -7,8 +7,9 @@ const Persons = ({dataToBeShown, deletePerson}) => {
           const {name, number, id} = person;
           return(
             <div key={id}>
-              <li>{name} | {number} </li>
-              <button onClick={() => deletePerson(person)}>delete</button>
+              <li>{name} | {number} {' '}
+                <button onClick={() => deletePerson(person)}>delete</button>
+              </li>
             </div>
           )
         })}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import FilterBox from './components/FilterBox';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import noteServices from './services/note';
@@ -9,9 +10,39 @@ const INIT_NEW_PERSON = {
   number: ''
 };
 
+const INIT_NOTIF = {
+  type: '',
+  message: ''
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newPerson, setNewPerson] = useState(INIT_NEW_PERSON)
+  const [notif, setNotif] = useState(INIT_NOTIF)
+
+  const Notif = {
+    info: (message) => {
+      setNotif({
+        type: '',
+        message
+      })
+      setTimeout(() => setNotif(INIT_NOTIF), 2500)
+    },
+    success: (message) => {
+      setNotif({
+        type: 'success',
+        message
+      })
+      setTimeout(() => setNotif(INIT_NOTIF), 2500)
+    },
+    error: (message) => {
+      setNotif({
+        type: 'error',
+        message
+      })
+      setTimeout(() => setNotif(INIT_NOTIF), 2500)
+    },
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +73,9 @@ const App = () => {
             })
             setPersons(newData);
             setNewPerson(INIT_NEW_PERSON);
+            Notif.success(`${newPerson.name} updated successfully`);
           })
+          .catch(err => console.log({err}))
         }
       }else{
       const newData = {...newPerson, id: newID}
@@ -50,7 +83,9 @@ const App = () => {
         .then(data => {
           setPersons([...persons, data]);
           setNewPerson(INIT_NEW_PERSON);
+          Notif.success(`Added ${newPerson.name}`);
         })
+        .catch(err => console.log({err}))
     }
   }
 
@@ -67,7 +102,12 @@ const App = () => {
       .then(() => {
         const newData = persons.filter(person => person.id !== id);
         setPersons(newData);
-        alert(`${name} was deleted successfully!`)
+        Notif.success(`${name} was deleted successfully!`);
+      })
+      .catch(err => {
+        if(err.response.status === 404) {
+          Notif.error( `Information of ${name} has already been removed from server`);
+        }
       })
     }
   }
@@ -81,12 +121,13 @@ const App = () => {
       .then(data => {
         setPersons(data)
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log({err}))
   }, [])
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification type={notif.type} message={notif.message} />
       <FilterBox keyword={keyword} handleFilter={handleFilter} />
       
       <h2>add a new</h2>
