@@ -1,10 +1,13 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
+const morgan = require('morgan');
 const {
   getAllPerson, getInfo, getPersonById, deletePersonById, addPerson,
 } = require('./handler/personHandler');
 
 const app = express();
 app.use(express.json());
+app.use(morgan('tiny'));
 
 const PORT = 3001;
 
