@@ -7,8 +7,10 @@ const {
 } = require('./handler/personHandler');
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
+app.use(express.static('build'));
 
 // creating new token for request body
 morgan.token('body-request', (req) => JSON.stringify(req.body));
