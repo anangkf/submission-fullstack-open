@@ -1,12 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const {
   getAllPerson, getInfo, getPersonById, deletePersonById, addPerson,
 } = require('./handler/personHandler');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // creating new token for request body
 morgan.token('body-request', (req) => JSON.stringify(req.body));
