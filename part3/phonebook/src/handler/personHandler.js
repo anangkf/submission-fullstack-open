@@ -1,7 +1,11 @@
 let persons = require('../mock/persons');
+const Person = require('../model/Person');
 
 const getAllPerson = (req, res) => {
-  res.json(persons);
+  Person.find({})
+    .then((people) => {
+      res.json(people);
+    });
 };
 
 const getInfo = (req, res) => {
@@ -11,12 +15,9 @@ const getInfo = (req, res) => {
 
 const getPersonById = (req, res) => {
   const { id } = req.params;
-  const currentPerson = persons.find((person) => person.id === Number(id));
-
-  if (currentPerson) {
-    return res.json(currentPerson);
-  }
-  return res.status(404).end();
+  Person.findById(id)
+    .then((data) => res.json(data))
+    .catch(() => res.status(404).end());
 };
 
 const deletePersonById = (req, res) => {
@@ -32,19 +33,16 @@ const deletePersonById = (req, res) => {
 
 const addPerson = (req, res) => {
   const { name, number } = req.body;
-  const newID = Math.floor(Math.random() * 9999999999999);
-  const personIsExist = persons.find((person) => person.name === name);
+  const newPerson = new Person({ name, number });
 
-  if (!(name && number)) {
-    res.status(400).json({ status: 'error', message: 'name or number is missing' });
-    return;
-  }
-
-  if (personIsExist) {
-    res.status(409).json({ status: 'error', message: 'name must be unique' });
+  if (name && number) {
+    newPerson
+      .save()
+      .then((data) => {
+        res.status(201).json(data);
+      });
   } else {
-    persons.push({ id: newID, name, number });
-    res.status(201).json({ id: newID, name, number });
+    res.status(400).end();
   }
 };
 
