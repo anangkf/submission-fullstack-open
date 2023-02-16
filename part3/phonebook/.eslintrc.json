@@ -22,6 +22,10 @@
         }
       ],
     "class-methods-use-this": "off",
-    "security/detect-object-injection": "off"
+    "security/detect-object-injection": "off",
+    "indent": [
+      "error",
+      2
+    ]
     }
 }
