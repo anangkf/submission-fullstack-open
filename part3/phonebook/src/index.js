@@ -7,7 +7,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const {
-  getAllPerson, getInfo, getPersonById, deletePersonById, addPerson,
+  getAllPerson, getInfo, getPersonById, deletePersonById, addPerson, updatePersonById,
 } = require('./handler/personHandler');
 const { unknownEndpoint, errorHandler } = require('./middleware/errorHandler');
 
@@ -36,6 +36,7 @@ app.get('/api/info', getInfo);
 app.get('/api/persons/:id', getPersonById);
 app.delete('/api/persons/:id', deletePersonById);
 app.post('/api/persons', addPerson);
+app.put('/api/persons/:id', updatePersonById);
 
 // send back a 404 error for any unknown endpoint request
 app.use(unknownEndpoint);
