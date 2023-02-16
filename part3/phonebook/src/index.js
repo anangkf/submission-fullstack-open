@@ -9,11 +9,17 @@ const cors = require('cors');
 const {
   getAllPerson, getInfo, getPersonById, deletePersonById, addPerson,
 } = require('./handler/personHandler');
+const { unknownEndpoint, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
+// parse json request body
 app.use(express.json());
+
+// enable cors
 app.use(cors());
+
+// create ui build
 app.use(express.static('build'));
 
 // configure database
@@ -30,6 +36,12 @@ app.get('/api/info', getInfo);
 app.get('/api/persons/:id', getPersonById);
 app.delete('/api/persons/:id', deletePersonById);
 app.post('/api/persons', addPerson);
+
+// send back a 404 error for any unknown endpoint request
+app.use(unknownEndpoint);
+
+// error handling
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,4 +1,4 @@
-let persons = require('../mock/persons');
+const persons = require('../mock/persons');
 const Person = require('../model/Person');
 
 const getAllPerson = (req, res) => {
@@ -13,22 +13,30 @@ const getInfo = (req, res) => {
   res.send(`<p>Phonebook has info for ${persons.length} people</p> ${date}`);
 };
 
-const getPersonById = (req, res) => {
+const getPersonById = (req, res, next) => {
   const { id } = req.params;
   Person.findById(id)
-    .then((data) => res.json(data))
-    .catch(() => res.status(404).end());
+    .then((data) => {
+      if (data) {
+        res.json(data);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((err) => next(err));
 };
 
-const deletePersonById = (req, res) => {
+const deletePersonById = (req, res, next) => {
   const { id } = req.params;
-  const deletedPerson = persons.find((person) => person.id === Number(id));
-  if (deletedPerson) {
-    persons = persons.filter((person) => person.id !== Number(id));
-    res.json({ message: `Person with id ${id} has been deleted`, data: deletedPerson });
-  } else {
-    res.status(404).json({ status: 'error', message: `Person with id ${id} was not found` });
-  }
+
+  Person.findByIdAndRemove(id)
+    .then((data) => {
+      if (data) {
+        res.json({ message: 'Person was deleted successfully', data });
+      }
+      res.status(404).send({ message: `person with id ${id} was not found` });
+    })
+    .catch((err) => next(err));
 };
 
 const addPerson = (req, res) => {
