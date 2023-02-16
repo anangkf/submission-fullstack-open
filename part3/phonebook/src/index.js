@@ -18,6 +18,7 @@ app.use(express.json());
 
 // enable cors
 app.use(cors());
+app.options('*', cors());
 
 // create ui build
 app.use(express.static('build'));

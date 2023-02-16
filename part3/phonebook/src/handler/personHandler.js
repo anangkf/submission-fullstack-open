@@ -41,7 +41,7 @@ const deletePersonById = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const addPerson = (req, res) => {
+const addPerson = (req, res, next) => {
   const { name, number } = req.body;
   const newPerson = new Person({ name, number });
 
@@ -50,7 +50,8 @@ const addPerson = (req, res) => {
       .save()
       .then((data) => {
         res.status(201).json(data);
-      });
+      })
+      .catch((err) => next(err));
   } else {
     res.status(400).end();
   }
@@ -65,7 +66,7 @@ const updatePersonById = (req, res, next) => {
    * "new" property is set to false by default,
    * if it given "true" value it will return the updated document
    */
-  Person.findByIdAndUpdate(id, body, { new: true, runValidators: true })
+  Person.findByIdAndUpdate(id, body, { new: true, runValidators: true, context: 'query' })
     .then((data) => {
       if (data) {
         res.send(data);

@@ -6,10 +6,16 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    minLength: 3,
   },
   number: {
     type: String,
     required: true,
+    minLength: 8,
+    validate: {
+      validator: (val) => /^\d{2,3}-{1,}?\d{5,}$/gm.test(val),
+      message: () => 'number invalid',
+    },
   },
 });
 

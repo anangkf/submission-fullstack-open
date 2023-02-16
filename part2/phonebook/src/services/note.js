@@ -17,7 +17,7 @@ const noteServices = {
       const res = await axios.post(baseURL, data)
       return res.data;
     } catch (err) {
-      throw new Error(err);
+      throw err
     }
   },
 
@@ -37,7 +37,7 @@ const noteServices = {
       const res = await axios.put(`${baseURL}/${id}`, data);
       return res.data;
     } catch (err) {
-      throw new Error(err);
+      throw err;
     }
   }
 }

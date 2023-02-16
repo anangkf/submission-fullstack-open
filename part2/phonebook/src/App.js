@@ -46,6 +46,7 @@ const App = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setNewPerson({
       ...newPerson,
       [name]: value
@@ -56,14 +57,13 @@ const App = () => {
     e.preventDefault();
     const isPersonExist = persons.filter(({name}) => name.toLowerCase() === newPerson.name.toLowerCase())
       .length > 0;
-    const newID = persons.at(-1).id + 1;
     
     if(isPersonExist){
-      const {id} = persons.filter(person => person.name === newPerson.name).at(0);
+      const {id} = persons.find(person => person.name === newPerson.name);
       if(
         window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)
         ) {
-          noteServices.update({...newPerson, id})
+        noteServices.update({...newPerson, id})
           .then((data) => {
             const newData = persons.map(person => {
               if(person.id === id){
@@ -75,18 +75,17 @@ const App = () => {
             setNewPerson(INIT_NEW_PERSON);
             Notif.success(`${newPerson.name} updated successfully`);
           })
-          .catch(err => console.log({err}))
+          .catch(err => Notif.error(err.response.data.error))
         }
       }else{
-      const newData = {...newPerson, id: newID}
-      noteServices.create(newData)
+      noteServices.create(newPerson)
         .then(data => {
           setPersons([...persons, data]);
           setNewPerson(INIT_NEW_PERSON);
           Notif.success(`Added ${newPerson.name}`);
         })
-        .catch(err => console.log({err}))
-    }
+        .catch(err => Notif.error(err.response.data.error))
+    }    
   }
 
   const [keyword, setKeyword] = useState('');
