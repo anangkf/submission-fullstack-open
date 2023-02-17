@@ -47,3 +47,23 @@ describe('favorite blog', () => {
     expect(results).toEqual(favBlog);
   });
 });
+
+describe('most blogs', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.mostBlogs(emptyList)).toBe(null);
+  });
+
+  test('when list has only one blog, it should return that author and blog count to be 1', () => {
+    const expectedResult = { name: 'Jack', count: 1 };
+    const results = listHelper.mostBlogs(singleBlog);
+
+    expect(results).toEqual(expectedResult);
+  });
+
+  test('of a bigger list is calculated right', () => {
+    const expectedResult = { name: 'Jack', count: 2 };
+    const results = listHelper.mostBlogs(manyBlogs);
+
+    expect(results).toEqual(expectedResult);
+  });
+});

@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
+
 const dummy = (blogs) => blogs.length;
 
 const totalLikes = (blogs) => {
@@ -22,4 +23,27 @@ const favoriteBlog = (blogs) => {
   return blogs.find(({ likes }) => likes === biggestLike);
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) return null;
+
+  const authors = blogs.map((blog) => blog.author);
+
+  // getting author with most blogs
+  const authorName = authors.reduce(
+    (a, b, _, arr) => (
+      arr.filter((v) => v === a).length >= arr.filter((v) => v === b).length
+        ? a
+        : b
+    ),
+    null,
+  );
+
+  // getting most blog count
+  const blogCount = authors.filter((author) => author === authorName).length;
+
+  return { name: authorName, count: blogCount };
+};
+
+module.exports = {
+  dummy, totalLikes, favoriteBlog, mostBlogs,
+};
