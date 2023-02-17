@@ -26,7 +26,7 @@ const manyBlogs = [
   }, {
     _id: '63ee4cce83e63a9b87245fad',
     title: 'My Third Blog',
-    author: 'Jack',
+    author: 'Zack',
     url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
     likes: 2,
   },
