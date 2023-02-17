@@ -7,7 +7,7 @@ test('dummy returns one', () => {
 });
 
 describe('total likes', () => {
-  test('of empty list is zero', () => {
+  test('of empty list should be zero', () => {
     expect(listHelper.totalLikes(emptyList)).toBe(0);
   });
 
@@ -23,7 +23,7 @@ describe('total likes', () => {
 });
 
 describe('favorite blog', () => {
-  test('of empty list is null', () => {
+  test('of empty list should be null', () => {
     const results = listHelper.favoriteBlog(emptyList);
 
     expect(results).toBe(null);
@@ -49,7 +49,7 @@ describe('favorite blog', () => {
 });
 
 describe('most blogs', () => {
-  test('of empty list is null', () => {
+  test('of empty list should be null', () => {
     expect(listHelper.mostBlogs(emptyList)).toBe(null);
   });
 
@@ -63,6 +63,26 @@ describe('most blogs', () => {
   test('of a bigger list is calculated right', () => {
     const expectedResult = { name: 'Jack', count: 2 };
     const results = listHelper.mostBlogs(manyBlogs);
+
+    expect(results).toEqual(expectedResult);
+  });
+});
+
+describe('most likes', () => {
+  test('of empty list should be null', () => {
+    expect(listHelper.mostLikes(emptyList)).toBe(null);
+  });
+
+  test('when list has only one blog, it should return that author and likes', () => {
+    const expectedResult = { name: 'Jack', likes: 3 };
+    const results = listHelper.mostLikes(singleBlog);
+
+    expect(results).toEqual(expectedResult);
+  });
+
+  test('of a bigger list is calculated right', () => {
+    const expectedResult = { author: 'Jack', likes: 10 };
+    const results = listHelper.mostLikes(manyBlogs);
 
     expect(results).toEqual(expectedResult);
   });

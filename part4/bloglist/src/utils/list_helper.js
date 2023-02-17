@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
-
 const dummy = (blogs) => blogs.length;
 
 const totalLikes = (blogs) => {
@@ -44,6 +43,35 @@ const mostBlogs = (blogs) => {
   return { name: authorName, count: blogCount };
 };
 
+const mostLikesReducer = (res, item) => {
+  const { author, likes } = item;
+  const isItemExist = res.find((val) => val.author === author);
+
+  if (isItemExist) {
+    res = res.map((val) => {
+      if (val.author === author) {
+        return { ...val, likes: val.likes + likes };
+      }
+      return val;
+    });
+  } else {
+    res.push({ author, likes });
+  }
+
+  return res.sort((a, b) => b.likes - a.likes);
+};
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return null;
+  if (blogs.length === 1) {
+    const [blog] = blogs;
+    return { name: blog.author, likes: blog.likes };
+  }
+
+  const results = blogs.reduce(mostLikesReducer, []);
+  return results.at(0);
+};
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs,
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes,
 };
