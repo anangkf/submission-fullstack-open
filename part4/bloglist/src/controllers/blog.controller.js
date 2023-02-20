@@ -1,14 +1,17 @@
 const Blog = require('../models/Blog');
 
-const getAllPosts = (req, res) => {
-  Blog.find()
-    .then((blogs) => {
-      if (blogs) {
-        res.json({ count: blogs.length, results: blogs });
-      } else {
-        res.status(404).end();
-      }
-    });
+const getAllPosts = async (req, res, next) => {
+  try {
+    const resp = await Blog.find();
+
+    if (resp) {
+      res.json({ count: resp.length, results: resp });
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 
 const createBlog = (req, res) => {

@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllPosts, createBlog } = require('../controllers/note.controller');
+const { getAllPosts, createBlog } = require('../controllers/blog.controller');
 
 const router = express.Router();
 
