@@ -1,5 +1,17 @@
 const Blog = require('../models/Blog');
 
+const exampleBlog = {
+  title: 'My Third Blog',
+  author: 'Zack',
+  url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
+  likes: 2,
+};
+
+const invalidBlog = {
+  url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
+  likes: 2,
+};
+
 const initialBlogs = [
   {
     title: 'My First Blog',
@@ -31,7 +43,9 @@ const nonExistingID = async () => {
 
 const blogsInDB = async () => {
   const blogs = await Blog.find();
-  return blogs.map((blog) => blog.toJSON());
+  return blogs.results.map((blog) => blog.toJSON());
 };
 
-module.exports = { initialBlogs, nonExistingID, blogsInDB };
+module.exports = {
+  exampleBlog, invalidBlog, initialBlogs, nonExistingID, blogsInDB,
+};

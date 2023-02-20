@@ -39,6 +39,41 @@ describe('/api/blogs', () => {
   });
 });
 
+describe('post /api/blogs', () => {
+  test('a valid blog can be added', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.exampleBlog)
+      .expect(201)
+      .expect('Content-Type', 'application/json; charset=utf-8');
+  });
+
+  test('after successfully adding 1 blog, it should return results with increased length by 1', async () => {
+    const response = await api.get('/api/blogs');
+    const titles = response.body.results.map((blog) => blog.title);
+
+    expect(titles).toContain(helper.exampleBlog.title);
+    expect(response.body.results).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('invalid blog data should not added', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.invalidBlog)
+      .expect(400);
+
+    const blogsAtEnd = await api.get('/api/blogs');
+    expect(blogsAtEnd.body.results).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('unique identifier property returned in response should named id', async () => {
+    const response = await api.get('/api/blogs');
+    const blog = response.body.results.at(0);
+
+    expect(blog.id).toBeDefined();
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

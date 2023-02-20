@@ -14,12 +14,14 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
-const createBlog = (req, res) => {
-  const blog = new Blog(req.body);
-
-  blog.save()
-    .then((data) => res.status(201).json(data))
-    .catch((err) => res.status(400).send(err.message));
+const createBlog = async (req, res, next) => {
+  try {
+    const blog = new Blog(req.body);
+    const data = await blog.save();
+    res.status(201).json(data);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {
