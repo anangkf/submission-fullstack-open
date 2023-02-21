@@ -39,6 +39,29 @@ const deleteBlogByID = async (req, res, next) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
+const updateBlogByID = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const { id } = req.params;
+
+    if (Object.keys(body).length === 0) {
+      return res.status(400).send({ message: 'Bad Request' });
+    }
+
+    const data = await Blog.findByIdAndUpdate(id, body, { new: true, runValidators: true, context: 'query' });
+
+    if (data) {
+      // eslint-disable-next-line no-underscore-dangle
+      res.send({ message: 'Blog updated succesfully', data });
+    } else {
+      res.status(404).send({ error: `Blog with id ${id} was not found` });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
-  getAllPosts, createBlog, deleteBlogByID,
+  getAllPosts, createBlog, deleteBlogByID, updateBlogByID,
 };

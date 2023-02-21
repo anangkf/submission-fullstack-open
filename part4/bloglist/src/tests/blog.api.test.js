@@ -128,6 +128,47 @@ describe('delete api/blogs/:id', () => {
   });
 });
 
+describe('put /api/blogs/:id', () => {
+  test('should return status code 200 if given id is valid and exist, then returned likes should be correct', async () => {
+    const { _id } = await Blog.findOne();
+    _id.toString();
+
+    const editedBlog = await api
+      .put(`/api/blogs/${_id}`)
+      .send({ likes: 5 })
+      .expect(200);
+
+    expect(editedBlog.body.data.likes).toBe(5);
+  });
+
+  test('should return status code 400 if given id is valid but request body invalid', async () => {
+    const { _id } = await Blog.findOne();
+    _id.toString();
+
+    await api
+      .put(`/api/blogs/${_id}`)
+      .expect(400);
+  });
+
+  test('should return status code 404 if given id is valid but not exist', async () => {
+    const id = await helper.nonExistingID();
+
+    await api
+      .put(`/api/blogs/${id}`)
+      .send({ likes: 5 })
+      .expect(404);
+  });
+
+  test('should return status code 400 if given id is invalid', async () => {
+    const id = '63f476a0d8c080a9de0';
+
+    await api
+      .put(`/api/blogs/${id}`)
+      .send({ likes: 5 })
+      .expect(400);
+  });
+}, 50000);
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
