@@ -15,7 +15,7 @@ beforeEach(async () => {
   const promiseArray = blogObject.map((blog) => blog.save());
 
   await Promise.all(promiseArray);
-});
+}, 50000);
 
 describe('/api/blogs', () => {
   test('should returned as json', async () => {
@@ -71,6 +71,25 @@ describe('post /api/blogs', () => {
     const blog = response.body.results.at(0);
 
     expect(blog.id).toBeDefined();
+  });
+
+  test('if the likes property is missing from the request, it should default to the value 0', async () => {
+    const response = await api
+      .post('/api/blogs')
+      .send(helper.exampleBlogWithoutLikes)
+      .expect(201);
+
+    expect(response.body.likes).toBe(0);
+  });
+
+  test('if the title or url properties are missing from the request data, it should responds with the status code 400', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.invalidBlog)
+      .expect(400);
+
+    const noteAtEnd = await api.get('/api/blogs');
+    expect(noteAtEnd.body.results).toHaveLength(helper.initialBlogs.length);
   });
 });
 

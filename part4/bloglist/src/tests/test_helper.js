@@ -7,8 +7,14 @@ const exampleBlog = {
   likes: 2,
 };
 
-const invalidBlog = {
+const exampleBlogWithoutLikes = {
+  title: 'My Third Blog',
+  author: 'Zack',
   url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
+};
+
+const invalidBlog = {
+  author: 'Zack',
   likes: 2,
 };
 
@@ -43,9 +49,9 @@ const nonExistingID = async () => {
 
 const blogsInDB = async () => {
   const blogs = await Blog.find();
-  return blogs.results.map((blog) => blog.toJSON());
+  return blogs.body.results.map((blog) => blog.toJSON());
 };
 
 module.exports = {
-  exampleBlog, invalidBlog, initialBlogs, nonExistingID, blogsInDB,
+  exampleBlog, exampleBlogWithoutLikes, invalidBlog, initialBlogs, nonExistingID, blogsInDB,
 };
