@@ -62,8 +62,8 @@ describe('post /api/blogs', () => {
       .send(helper.invalidBlog)
       .expect(400);
 
-    const blogsAtEnd = await api.get('/api/blogs');
-    expect(blogsAtEnd.body.results).toHaveLength(helper.initialBlogs.length);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 
   test('unique identifier property returned in response should named id', async () => {
@@ -88,8 +88,43 @@ describe('post /api/blogs', () => {
       .send(helper.invalidBlog)
       .expect(400);
 
-    const noteAtEnd = await api.get('/api/blogs');
-    expect(noteAtEnd.body.results).toHaveLength(helper.initialBlogs.length);
+    const noteAtEnd = await helper.blogsInDB();
+    expect(noteAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+});
+
+describe('delete api/blogs/:id', () => {
+  test('should return status code 200 if given id is valid and exist', async () => {
+    const id = await helper.validExistingID();
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(200);
+
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('should return status code 404 if given id is valid but not exist', async () => {
+    const id = await helper.nonExistingID();
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(404);
+
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('should return status code 400 if given id is invalid', async () => {
+    const id = '63f476a0d8c080a9de0';
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(400);
+
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 });
 

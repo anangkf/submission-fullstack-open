@@ -47,11 +47,30 @@ const nonExistingID = async () => {
   return blog._id.toString();
 };
 
+const validExistingID = async () => {
+  const blog = new Blog({
+    title: 'My Third Blog',
+    author: 'Zack',
+    url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
+    likes: 2,
+  });
+  await blog.save();
+
+  // eslint-disable-next-line no-underscore-dangle
+  return blog._id.toString();
+};
+
 const blogsInDB = async () => {
   const blogs = await Blog.find();
-  return blogs.body.results.map((blog) => blog.toJSON());
+  return blogs.map((blog) => blog.toJSON());
 };
 
 module.exports = {
-  exampleBlog, exampleBlogWithoutLikes, invalidBlog, initialBlogs, nonExistingID, blogsInDB,
+  exampleBlog,
+  exampleBlogWithoutLikes,
+  invalidBlog,
+  initialBlogs,
+  nonExistingID,
+  validExistingID,
+  blogsInDB,
 };

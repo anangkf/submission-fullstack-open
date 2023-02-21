@@ -24,6 +24,21 @@ const createBlog = async (req, res, next) => {
   }
 };
 
+const deleteBlogByID = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const data = await Blog.findByIdAndRemove(id);
+    if (data) {
+      res.status(200).send({ message: 'Blog deleted sucessfully', data });
+    } else {
+      res.status(404).send({ message: `Blog with id ${id} was not found` });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
-  getAllPosts, createBlog,
+  getAllPosts, createBlog, deleteBlogByID,
 };
