@@ -1,7 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
 const User = require('../models/User');
+const getTokenFrom = require('../utils/getTokenForm');
 
-const getAllPosts = async (req, res, next) => {
+const getAllBlogs = async (req, res, next) => {
   try {
     const resp = await Blog.find()
       .populate('user', { username: 1, name: 1 });
@@ -16,10 +19,16 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 const createBlog = async (req, res, next) => {
   try {
-    const blog = new Blog(req.body);
-    const user = await User.findById(blog.user);
+    const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+    if (!decodedToken.id) {
+      return res.status(401).send({ error: 'invalid token' });
+    }
+    const blog = new Blog({ ...req.body, user: decodedToken.id });
+
+    const user = await User.findById(decodedToken.id);
     const savedBlog = await blog.save();
     // eslint-disable-next-line no-underscore-dangle
     user.blogs = [...user.blogs, savedBlog._id];
@@ -70,5 +79,5 @@ const updateBlogByID = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllPosts, createBlog, deleteBlogByID, updateBlogByID,
+  getAllBlogs, createBlog, deleteBlogByID, updateBlogByID,
 };
