@@ -7,6 +7,7 @@ const logger = require('./utils/logger');
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
 const blogRouter = require('./routes/blogRoute');
+const userRouter = require('./routes/userRoute');
 
 mongoose.set('strictQuery', false);
 
@@ -33,6 +34,7 @@ app.use(middleware.requestLogger);
 
 // app routes
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
 
 // added middleware for unknown endpoint and error handler
 app.use(middleware.unknownEndpoint);
