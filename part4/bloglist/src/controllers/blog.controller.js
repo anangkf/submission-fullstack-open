@@ -1,8 +1,10 @@
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 
 const getAllPosts = async (req, res, next) => {
   try {
-    const resp = await Blog.find();
+    const resp = await Blog.find()
+      .populate('user', { username: 1, name: 1 });
 
     if (resp) {
       res.json({ count: resp.length, results: resp });
@@ -17,8 +19,13 @@ const getAllPosts = async (req, res, next) => {
 const createBlog = async (req, res, next) => {
   try {
     const blog = new Blog(req.body);
-    const data = await blog.save();
-    res.status(201).json(data);
+    const user = await User.findById(blog.user);
+    const savedBlog = await blog.save();
+    // eslint-disable-next-line no-underscore-dangle
+    user.blogs = [...user.blogs, savedBlog._id];
+    await user.save();
+
+    res.status(201).json({ data: savedBlog });
   } catch (err) {
     next(err);
   }

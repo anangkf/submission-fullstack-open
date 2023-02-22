@@ -26,7 +26,8 @@ const registerUser = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const data = await User.find();
+    const data = await User.find()
+      .populate('blogs', { user: 0 });
     res.send(data);
   } catch (err) {
     next(err);
