@@ -39,6 +39,11 @@ describe('/api/blogs', () => {
   });
 });
 
+/**
+ * TODO: if authorization token is missing it should return propper status code and error message
+ * TODO: if authorization token is invalid it should return propper status code and error message
+ * TODO: if authorization token is valid, it should add the blog to correct user
+ */
 describe('post /api/blogs', () => {
   test('a valid blog can be added', async () => {
     await api

@@ -105,6 +105,14 @@ describe('user register', () => {
   });
 });
 
+/**
+ * TODO: test /api/users/login
+ * TODO: if username is missing it should return propper status code and error message
+ * TODO: if password is missing it should return propper status code and error message
+ * TODO: if username or password doesnt match it should return propper status code and error message
+ * TODO: if credentials are valid it should return token, username and name
+ */
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

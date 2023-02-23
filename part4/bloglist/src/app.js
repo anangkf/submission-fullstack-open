@@ -32,6 +32,9 @@ app.use(express.json());
 // added request logger middleware
 app.use(middleware.requestLogger);
 
+// added token extractor middleware
+app.use(middleware.tokenExtractor);
+
 // app routes
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
