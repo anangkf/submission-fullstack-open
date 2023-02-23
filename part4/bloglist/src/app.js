@@ -36,7 +36,7 @@ app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
 // app routes
-app.use('/api/blogs', blogRouter);
+app.use('/api/blogs', middleware.userExtractor, blogRouter);
 app.use('/api/users', userRouter);
 
 // added middleware for unknown endpoint and error handler

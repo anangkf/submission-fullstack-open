@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
-const User = require('../models/User');
 
 const getAllBlogs = async (req, res, next) => {
   try {
@@ -21,13 +20,13 @@ const getAllBlogs = async (req, res, next) => {
 // eslint-disable-next-line consistent-return
 const createBlog = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const { token, user } = req;
+    const decodedToken = jwt.verify(token, process.env.SECRET);
     if (!decodedToken.id) {
       return res.status(401).send({ error: 'invalid token' });
     }
     const blog = new Blog({ ...req.body, user: decodedToken.id });
 
-    const user = await User.findById(decodedToken.id);
     const savedBlog = await blog.save();
     // eslint-disable-next-line no-underscore-dangle
     user.blogs = [...user.blogs, savedBlog._id];
@@ -43,9 +42,9 @@ const createBlog = async (req, res, next) => {
 const deleteBlogByID = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const { token, user } = req;
+    const decodedToken = jwt.verify(token, process.env.SECRET);
     const blog = await Blog.findById(id);
-    const user = await User.findById(decodedToken.id);
     const isUserMatch = blog?.user.toString() === decodedToken.id.toString();
 
     if (!blog) {
