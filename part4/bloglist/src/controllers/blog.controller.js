@@ -39,15 +39,28 @@ const createBlog = async (req, res, next) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 const deleteBlogByID = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const blog = await Blog.findById(id);
+    const user = await User.findById(decodedToken.id);
+    const isUserMatch = blog?.user.toString() === decodedToken.id.toString();
 
-    const data = await Blog.findByIdAndRemove(id);
+    if (!blog) {
+      return res.status(404).send({ message: `Blog with id ${id} was not found` });
+    }
+    if (!isUserMatch) {
+      return res.status(401).send({ error: 'invalid token' });
+    }
+
+    const data = await blog.remove();
     if (data) {
+      // eslint-disable-next-line no-underscore-dangle
+      user.blogs = user.blogs.filter((blogId) => blogId.toString() !== data._id.toString());
+      await user.save();
       res.status(200).send({ message: 'Blog deleted sucessfully', data });
-    } else {
-      res.status(404).send({ message: `Blog with id ${id} was not found` });
     }
   } catch (err) {
     next(err);
