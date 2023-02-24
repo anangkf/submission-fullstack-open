@@ -9,10 +9,10 @@ const blogSchema = Schema({
     type: String,
     required: true,
   },
-  // author: {
-  //   type: String,
-  //   required: true,
-  // },
+  author: {
+    type: String,
+    required: true,
+  },
   url: {
     type: String,
     required: true,
