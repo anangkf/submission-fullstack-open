@@ -4,7 +4,7 @@ const Blog = ({ blog }) => (
   <div>
     {blog.title}
     {' | '}
-    {blog.user.name}
+    {blog.author}
   </div>
 );
 

@@ -2,8 +2,11 @@
 import React from 'react';
 import Cookies from 'js-cookie';
 import Blog from './Blog';
+import BlogForm from './BlogForm';
 
-const BlogList = ({ blogs, refetchToken }) => {
+const BlogList = ({
+  blogs, refetchToken, setBlogs, Notif,
+}) => {
   const name = Cookies.get('name');
 
   const handleLogout = () => {
@@ -19,6 +22,7 @@ const BlogList = ({ blogs, refetchToken }) => {
         {`${name} logged in`}
         <button onClick={handleLogout}>logout</button>
       </p>
+      <BlogForm blogs={blogs} setBlogs={setBlogs} Notif={Notif} />
       {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
     </>
   );

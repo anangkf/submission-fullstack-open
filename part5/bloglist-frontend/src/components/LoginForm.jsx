@@ -7,7 +7,7 @@ const INITIAL_USER_DATA = {
   password: '',
 };
 
-const LoginForm = ({ refetchToken }) => {
+const LoginForm = ({ refetchToken, Notif }) => {
   const [userData, setUserData] = useState(INITIAL_USER_DATA);
   const { username, password } = userData;
 
@@ -28,7 +28,7 @@ const LoginForm = ({ refetchToken }) => {
       refetchToken();
       setUserData(INITIAL_USER_DATA);
     } catch (error) {
-      alert(error.message);
+      Notif.error('wrong username or password');
     }
   };
 
