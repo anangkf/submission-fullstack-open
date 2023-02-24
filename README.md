@@ -1,2 +1,2 @@
 # submission-fulstack-open
-A submissions repository for Fullstack Open 2022
+A exercise solution repository for Fullstack Open 2022 
