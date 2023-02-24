@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcryptjs');
 const app = require('../app');
 const User = require('../models/User');
 const helper = require('./user_test_helper');
@@ -10,7 +12,11 @@ const api = supertest(app);
 beforeEach(async () => {
   await User.deleteMany();
 
-  const usersObject = helper.initialUsers.map((user) => new User(user));
+  const usersObject = helper.initialUsers.map((user) => {
+    const passwordHash = bcrypt.hashSync(user.password, 10);
+    return new User({ ...user, passwordHash });
+  });
+
   const promiseArray = usersObject.map((user) => user.save());
 
   await Promise.all(promiseArray);
@@ -105,13 +111,36 @@ describe('user register', () => {
   });
 });
 
-/**
- * TODO: test /api/users/login
- * TODO: if username is missing it should return propper status code and error message
- * TODO: if password is missing it should return propper status code and error message
- * TODO: if username or password doesnt match it should return propper status code and error message
- * TODO: if credentials are valid it should return token, username and name
- */
+describe('post /api/login', () => {
+  test('login with valid credential should return token on its response body', async () => {
+    const res = await api
+      .post('/api/login')
+      .send(helper.validCredential)
+      .expect(200);
+
+    expect(res.body.token).toBeDefined();
+    expect(res.body.username).toBeDefined();
+    expect(res.body.name).toBeDefined();
+  });
+
+  test('if username or password doesnt match it should return propper status code and error message', async () => {
+    const res = await api
+      .post('/api/login')
+      .send(helper.invalidCredential)
+      .expect(401);
+
+    expect(res.body).toEqual(helper.errorInvalidCredential);
+  });
+
+  test('if username or password missing it should return propper status code and error message', async () => {
+    const res = await api
+      .post('/api/login')
+      .send(helper.incompleteCredential)
+      .expect(400);
+
+    expect(res.body).toEqual(helper.errorIncompleteCredential);
+  });
+});
 
 afterAll(async () => {
   await mongoose.connection.close();

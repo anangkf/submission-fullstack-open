@@ -1,17 +1,32 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
+const jwt = require('jsonwebtoken');
 const app = require('../app');
 const Blog = require('../models/Blog');
 const helper = require('./test_helper');
+const authHelper = require('./user_test_helper');
+const { validCredential } = require('./user_test_helper');
 
 const api = supertest(app);
+
+// getting aauthorization token before all request
+let token = '';
+beforeAll(async () => {
+  const res = await api
+    .post('/api/login')
+    .send(validCredential);
+
+  token = res.body.token;
+});
 
 // configure state in database before running tests
 beforeEach(async () => {
   await Blog.deleteMany();
+  const decodedToken = jwt.verify(token, process.env.SECRET);
 
-  const blogObject = helper.initialBlogs.map((blog) => new Blog(blog));
+  const blogObject = helper.initialBlogs
+    .map((blog) => new Blog({ ...blog, user: decodedToken.id }));
   const promiseArray = blogObject.map((blog) => blog.save());
 
   await Promise.all(promiseArray);
@@ -39,32 +54,59 @@ describe('/api/blogs', () => {
   });
 });
 
-/**
- * TODO: if authorization token is missing it should return propper status code and error message
- * TODO: if authorization token is invalid it should return propper status code and error message
- * TODO: if authorization token is valid, it should add the blog to correct user
- */
 describe('post /api/blogs', () => {
-  test('a valid blog can be added', async () => {
+  test('a valid blog with valid token should be added', async () => {
     await api
       .post('/api/blogs')
       .send(helper.exampleBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', 'application/json; charset=utf-8');
+
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
   });
 
-  test('after successfully adding 1 blog, it should return results with increased length by 1', async () => {
-    const response = await api.get('/api/blogs');
-    const titles = response.body.results.map((blog) => blog.title);
+  test('if authorization token is missing it should return propper status code and error message', async () => {
+    const res = await api
+      .post('/api/blogs')
+      .send(helper.exampleBlog)
+      .expect(401);
 
-    expect(titles).toContain(helper.exampleBlog.title);
-    expect(response.body.results).toHaveLength(helper.initialBlogs.length);
+    expect(res.body).toEqual(authHelper.errorMissingJwt);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('if authorization token is expired it should return propper status code and error message', async () => {
+    const res = await api
+      .post('/api/blogs')
+      .send(helper.exampleBlog)
+      .set('Authorization', `Bearer ${authHelper.expiredToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorTokenExpired);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('if authorization token is invalid it should return propper status code and error message', async () => {
+    const res = await api
+      .post('/api/blogs')
+      .send(helper.exampleBlog)
+      .set('Authorization', `Bearer ${authHelper.invalidToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorInvalidToken);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 
   test('invalid blog data should not added', async () => {
     await api
       .post('/api/blogs')
       .send(helper.invalidBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
     const blogsAtEnd = await helper.blogsInDB();
@@ -82,15 +124,17 @@ describe('post /api/blogs', () => {
     const response = await api
       .post('/api/blogs')
       .send(helper.exampleBlogWithoutLikes)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201);
 
-    expect(response.body.likes).toBe(0);
+    expect(response.body.data.likes).toBe(0);
   });
 
   test('if the title or url properties are missing from the request data, it should responds with the status code 400', async () => {
     await api
       .post('/api/blogs')
       .send(helper.invalidBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
     const noteAtEnd = await helper.blogsInDB();
@@ -99,13 +143,52 @@ describe('post /api/blogs', () => {
 });
 
 describe('delete api/blogs/:id', () => {
-  test('should return status code 200 if given id is valid and exist', async () => {
+  test('if given id and token are valid, it should remove the blog from correct user', async () => {
     const id = await helper.validExistingID();
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+  });
+
+  test('if authorization token is missing it should return propper status code and error message', async () => {
+    const id = await helper.validExistingID();
+
+    const res = await api
+      .delete(`/api/blogs/${id}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorMissingJwt);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('if authorization token is invalid it should return propper status code and error message', async () => {
+    const id = await helper.validExistingID();
+
+    const res = await api
+      .delete(`/api/blogs/${id}`)
+      .set('Authorization', `Bearer ${authHelper.invalidToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorInvalidToken);
+    const blogsAtEnd = await helper.blogsInDB();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('if authorization token is expired it should return propper status code and error message', async () => {
+    const id = await helper.validExistingID();
+
+    const res = await api
+      .delete(`/api/blogs/${id}`)
+      .set('Authorization', `Bearer ${authHelper.expiredToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorTokenExpired);
     const blogsAtEnd = await helper.blogsInDB();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
@@ -115,6 +198,7 @@ describe('delete api/blogs/:id', () => {
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404);
 
     const blogsAtEnd = await helper.blogsInDB();
@@ -126,6 +210,7 @@ describe('delete api/blogs/:id', () => {
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
     const blogsAtEnd = await helper.blogsInDB();
@@ -141,9 +226,48 @@ describe('put /api/blogs/:id', () => {
     const editedBlog = await api
       .put(`/api/blogs/${_id}`)
       .send({ likes: 5 })
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
     expect(editedBlog.body.data.likes).toBe(5);
+  });
+
+  test('if authorization token is missing it should return propper status code and error message', async () => {
+    const { _id } = await Blog.findOne();
+    _id.toString();
+
+    const res = await api
+      .put(`/api/blogs/${_id}`)
+      .send({ likes: 5 })
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorMissingJwt);
+  });
+
+  test('if authorization token is invalid it should return propper status code and error message', async () => {
+    const { _id } = await Blog.findOne();
+    _id.toString();
+
+    const res = await api
+      .put(`/api/blogs/${_id}`)
+      .send({ likes: 5 })
+      .set('Authorization', `Bearer ${authHelper.invalidToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorInvalidToken);
+  });
+
+  test('if authorization token is expired it should return propper status code and error message', async () => {
+    const { _id } = await Blog.findOne();
+    _id.toString();
+
+    const res = await api
+      .put(`/api/blogs/${_id}`)
+      .send({ likes: 5 })
+      .set('Authorization', `Bearer ${authHelper.expiredToken}`)
+      .expect(401);
+
+    expect(res.body).toEqual(authHelper.errorTokenExpired);
   });
 
   test('should return status code 400 if given id is valid but request body invalid', async () => {
@@ -152,6 +276,7 @@ describe('put /api/blogs/:id', () => {
 
     await api
       .put(`/api/blogs/${_id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400);
   });
 
@@ -161,6 +286,7 @@ describe('put /api/blogs/:id', () => {
     await api
       .put(`/api/blogs/${id}`)
       .send({ likes: 5 })
+      .set('Authorization', `Bearer ${token}`)
       .expect(404);
   });
 
@@ -170,6 +296,7 @@ describe('put /api/blogs/:id', () => {
     await api
       .put(`/api/blogs/${id}`)
       .send({ likes: 5 })
+      .set('Authorization', `Bearer ${token}`)
       .expect(400);
   });
 }, 50000);

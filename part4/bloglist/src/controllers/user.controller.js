@@ -29,6 +29,10 @@ const registerUser = async (req, res, next) => {
 const userLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body;
+    if (!(username && password)) {
+      return res.status(400).send({ error: 'username or password missing' });
+    }
+
     const user = await User.findOne({ username });
     const passwordCorrect = user === null
       ? false

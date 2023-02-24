@@ -48,13 +48,7 @@ const nonExistingID = async () => {
 };
 
 const validExistingID = async () => {
-  const blog = new Blog({
-    title: 'My Third Blog',
-    author: 'Zack',
-    url: 'https://bestblogs.com/blog/j8hjqw-auq812-jahsaq',
-    likes: 2,
-  });
-  await blog.save();
+  const blog = await Blog.findOne();
 
   // eslint-disable-next-line no-underscore-dangle
   return blog._id.toString();

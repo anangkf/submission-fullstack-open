@@ -7,11 +7,7 @@ const getAllBlogs = async (req, res, next) => {
     const resp = await Blog.find()
       .populate('user', { username: 1, name: 1 });
 
-    if (resp) {
-      res.json({ count: resp.length, results: resp });
-    } else {
-      res.status(404).end();
-    }
+    res.json({ count: resp.length, results: resp });
   } catch (err) {
     next(err);
   }

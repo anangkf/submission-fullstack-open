@@ -27,7 +27,9 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
     return res.status(401).send({ error: err.message });
   }
-
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).send({ error: 'token expired' });
+  }
   next(err);
 };
 
@@ -42,9 +44,17 @@ const tokenExtractor = (req, res, next) => {
   next();
 };
 
+// eslint-disable-next-line consistent-return
 const userExtractor = async (req, res, next) => {
   if (req.method !== 'GET') {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const decodedToken = jwt.verify(req.token, process.env.SECRET, (err, decoded) => {
+      // handle expired token
+      if (err) {
+        return next(err);
+      } return decoded;
+    });
+    if (!decodedToken?.id) return null;
+
     req.user = await User.findById(decodedToken.id);
   }
 
