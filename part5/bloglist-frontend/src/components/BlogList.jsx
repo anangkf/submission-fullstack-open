@@ -3,6 +3,7 @@ import React from 'react';
 import Cookies from 'js-cookie';
 import Blog from './Blog';
 import BlogForm from './BlogForm';
+import Togglable from './Togglable';
 
 const BlogList = ({
   blogs, refetchToken, setBlogs, Notif,
@@ -22,7 +23,9 @@ const BlogList = ({
         {`${name} logged in`}
         <button onClick={handleLogout}>logout</button>
       </p>
-      <BlogForm blogs={blogs} setBlogs={setBlogs} Notif={Notif} />
+      <Togglable buttonLabel="new blog">
+        <BlogForm blogs={blogs} setBlogs={setBlogs} Notif={Notif} />
+      </Togglable>
       {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
     </>
   );

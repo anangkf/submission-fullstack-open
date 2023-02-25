@@ -8,7 +8,9 @@ const INITIAL_BLOG_DATA = {
   url: '',
 };
 
-const BlogForm = ({ blogs, setBlogs, Notif }) => {
+const BlogForm = ({
+  blogs, setBlogs, Notif, toggleChildren,
+}) => {
   const [blogData, setBlogData] = useState(INITIAL_BLOG_DATA);
   const [token, setToken] = useState(Cookies.get('token'));
   const { title, author, url } = blogData;
@@ -28,6 +30,7 @@ const BlogForm = ({ blogs, setBlogs, Notif }) => {
       setBlogs([...blogs, res]);
       Notif.success(`a new blog ${title} by ${author} added`);
       setBlogData(INITIAL_BLOG_DATA);
+      toggleChildren();
     } catch (error) {
       Notif.error(error.message);
     }
