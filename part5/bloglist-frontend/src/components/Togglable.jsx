@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 
-const Togglable = ({ buttonLabel, children }) => {
+const Togglable = ({ buttonLabel, children, toggleHeader }) => {
   const [visibility, setVisibility] = useState(false);
 
-  const toggleChildren = () => setVisibility(!visibility);
+  const toggleChildren = () => {
+    if (toggleHeader) {
+      toggleHeader();
+    }
+    setVisibility(!visibility);
+  };
 
   // adding props to each props.children
   const childrenWithProps = React.Children.map(children, (child) => {
