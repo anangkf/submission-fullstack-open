@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import axios from 'axios';
 
 const baseUrl = '/api/blogs';
@@ -21,5 +22,20 @@ const create = async ({ data, token }) => {
   }
 };
 
+const edit = async ({ data, token }) => {
+  const { id } = data;
+  const reqConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const res = await axios.put(`${baseUrl}/${id}`, { likes: data.likes }, reqConfig);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create };
+export default { getAll, create, edit };

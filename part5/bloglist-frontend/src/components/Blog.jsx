@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 import BlogDetails from './BlogDetails';
 import Togglable from './Togglable';
+import blogService from '../services/blogs';
 
 const blogStyle = {
   paddingTop: 10,
@@ -10,8 +12,31 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog }) => {
+const token = Cookies.get('token');
+
+const Blog = ({
+  blog, blogs, setBlogs, Notif,
+}) => {
   const [hide, setHide] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLike = async () => {
+    try {
+      setLoading(true);
+      const res = await blogService.edit({ data: { ...blog, likes: blog.likes + 1 }, token });
+      setLoading(false);
+      // eslint-disable-next-line no-shadow
+      const newBlogs = blogs.map((blog) => {
+        if (blog.id === res.data.id) {
+          return res.data;
+        } return blog;
+      });
+      setBlogs(newBlogs);
+    } catch (error) {
+      Notif.error(error.message);
+      setLoading(false);
+    }
+  };
 
   const toggleHeader = () => setHide(!hide);
 
@@ -20,7 +45,7 @@ const Blog = ({ blog }) => {
       <div>
         {!hide && `${blog.title} ${blog.author}`}
         <Togglable buttonLabel="view" toggleHeader={toggleHeader}>
-          <BlogDetails blog={blog} />
+          <BlogDetails blog={blog} handleLike={handleLike} loading={loading} />
         </Togglable>
       </div>
     </div>
