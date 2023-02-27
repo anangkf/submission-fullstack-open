@@ -1,6 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const Togglable = ({ buttonLabel, children, toggleHeader }) => {
+const Togglable = ({ buttonLabel = 'toggle', children, toggleHeader }) => {
   const [visibility, setVisibility] = useState(false);
 
   const toggleChildren = () => {
@@ -23,6 +25,10 @@ const Togglable = ({ buttonLabel, children, toggleHeader }) => {
   return (
     <button type="button" onClick={toggleChildren}>{buttonLabel}</button>
   );
+};
+
+Togglable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
 };
 
 export default Togglable;
