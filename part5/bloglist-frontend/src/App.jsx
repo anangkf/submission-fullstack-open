@@ -43,6 +43,8 @@ const App = () => {
     setToken(Cookies.get('token'));
   };
 
+  const blogList = blogs.sort((a, b) => b.likes - a.likes);
+
   useEffect(() => {
     blogService.getAll().then((data) => {
       setBlogs(data.results);
@@ -54,7 +56,14 @@ const App = () => {
       <Notification type={notif.type} message={notif.message} />
       {!token
         ? <LoginForm refetchToken={refetchToken} Notif={Notif} />
-        : <BlogList blogs={blogs} refetchToken={refetchToken} setBlogs={setBlogs} Notif={Notif} />}
+        : (
+          <BlogList
+            blogs={blogList}
+            refetchToken={refetchToken}
+            setBlogs={setBlogs}
+            Notif={Notif}
+          />
+        )}
     </div>
   );
 };
