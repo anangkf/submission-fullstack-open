@@ -37,5 +37,21 @@ const edit = async ({ data, token }) => {
   }
 };
 
+const remove = async ({ id, token }) => {
+  const reqConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const res = await axios.delete(`${baseUrl}/${id}`, reqConfig);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, edit };
+export default {
+  getAll, create, edit, remove,
+};

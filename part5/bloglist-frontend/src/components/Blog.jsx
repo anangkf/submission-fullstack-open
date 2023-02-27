@@ -38,6 +38,20 @@ const Blog = ({
     }
   };
 
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      const res = await blogService.remove({ id: blog.id, token });
+      const remainingBlogs = blogs.filter((item) => item.id !== res.data.id);
+      setBlogs(remainingBlogs);
+      Notif.success(`${blog.title} by ${blog.author} deleted successfully!`);
+      setLoading(false);
+    } catch (error) {
+      Notif.error(error.message);
+      setLoading(false);
+    }
+  };
+
   const toggleHeader = () => setHide(!hide);
 
   return (
@@ -45,7 +59,12 @@ const Blog = ({
       <div>
         {!hide && `${blog.title} ${blog.author}`}
         <Togglable buttonLabel="view" toggleHeader={toggleHeader}>
-          <BlogDetails blog={blog} handleLike={handleLike} loading={loading} />
+          <BlogDetails
+            blog={blog}
+            handleLike={handleLike}
+            loading={loading}
+            handleDelete={handleDelete}
+          />
         </Togglable>
       </div>
     </div>
