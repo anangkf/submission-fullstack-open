@@ -51,6 +51,16 @@ const BlogList = ({
     }
   };
 
+  const createBlog = async (data) => {
+    try {
+      const res = await blogService.create({ data, token });
+      setBlogs([...blogs, res]);
+      Notif.success(`a new blog ${data.title} by ${data.author} added`);
+    } catch (error) {
+      Notif.error(error.message);
+    }
+  }
+
   return (
     <>
       <h2>blogs</h2>
@@ -59,7 +69,7 @@ const BlogList = ({
         <button onClick={handleLogout}>logout</button>
       </p>
       <Togglable buttonLabel="new blog">
-        <BlogForm blogs={blogs} setBlogs={setBlogs} Notif={Notif} />
+        <BlogForm createBlog={createBlog} />
       </Togglable>
       {blogs.map((blog) => (
         <Blog

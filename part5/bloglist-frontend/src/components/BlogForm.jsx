@@ -1,6 +1,4 @@
-import Cookies from 'js-cookie';
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
 
 const INITIAL_BLOG_DATA = {
   title: '',
@@ -9,10 +7,9 @@ const INITIAL_BLOG_DATA = {
 };
 
 const BlogForm = ({
-  blogs, setBlogs, Notif, toggleChildren,
+  createBlog, toggleChildren,
 }) => {
   const [blogData, setBlogData] = useState(INITIAL_BLOG_DATA);
-  const [token, setToken] = useState(Cookies.get('token'));
   const { title, author, url } = blogData;
 
   const handleChange = (e) => {
@@ -23,17 +20,11 @@ const BlogForm = ({
     });
   };
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      const res = await blogService.create({ data: blogData, token });
-      setBlogs([...blogs, res]);
-      Notif.success(`a new blog ${title} by ${author} added`);
-      setBlogData(INITIAL_BLOG_DATA);
-      toggleChildren();
-    } catch (error) {
-      Notif.error(error.message);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createBlog(blogData);
+    setBlogData(INITIAL_BLOG_DATA);
+    toggleChildren();
   };
 
   return (
