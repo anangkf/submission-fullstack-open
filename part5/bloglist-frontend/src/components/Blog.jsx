@@ -32,7 +32,7 @@ const Blog = ({
       <button type="button" onClick={toggleHeader}>{hide ? 'hide' : 'show'}</button>
       <div data-testid="blog-details" style={detailStyle}>
         <a href={blog.url}>{blog.url}</a>
-        <div>
+        <div className='likes'>
           {`likes ${blog.likes}`}
           {' '}
           <button type="button" disabled={loading} onClick={() => handleLike(blog)}>like</button>

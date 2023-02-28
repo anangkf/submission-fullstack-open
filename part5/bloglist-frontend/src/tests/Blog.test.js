@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Blog from '../components/Blog';
 
@@ -36,6 +36,22 @@ describe('<Blog />', () => {
     expect(defaultBlogContent).not.toHaveStyle('display: none');
     expect(defaultBlogContent).toBeVisible;
     expect(defaultHiddenContent).toHaveStyle('display: none');
+  });
+
+  test('renders blog url and number of likes when view button is clicked', () => {
+    const button = component.getByText('show');
+
+    fireEvent.click(button);
+
+    const revealedContent = component.getByTestId('blog-details');
+    const likes = component.container.querySelector('.likes');
+
+    expect(revealedContent).not.toHaveStyle('display: none');
+    expect(revealedContent).toBeVisible();
+    expect(component.container).toHaveTextContent('likes');
+    expect(likes).toHaveTextContent(blog.likes);
+    expect(component.container).toHaveTextContent(blog.url);
   })
   
+
 });
