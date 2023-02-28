@@ -2,19 +2,19 @@ import React from 'react';
 import Cookies from 'js-cookie';
 
 const BlogDetails = ({
-  blog, toggleChildren, handleLike, loading, handleDelete,
+  blog, toggleChildren, loading, handleLike, handleDelete,
 }) => {
   const usersName = Cookies.get('name');
 
   const deleteBlog = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
-      handleDelete();
+      handleDelete(blog);
     }
   };
 
   return (
-    <>
-      <div>
+    <div id="blog-details">
+      <div id="title">
         {blog.title}
         {' '}
         <button type="button" onClick={toggleChildren}>hide</button>
@@ -23,12 +23,12 @@ const BlogDetails = ({
       <div>
         {`likes ${blog.likes}`}
         {' '}
-        <button type="button" disabled={loading} onClick={handleLike}>like</button>
+        <button type="button" disabled={loading} onClick={() => handleLike(blog)}>like</button>
       </div>
       {blog.author}
       <br />
       {blog.user.name === usersName && <button type="button" disabled={loading} onClick={deleteBlog}>remove</button>}
-    </>
+    </div>
   );
 };
 

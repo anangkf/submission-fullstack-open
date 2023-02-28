@@ -74,6 +74,7 @@ const BlogForm = ({
         </label>
         <br />
         <button type="submit">create</button>
+        <button type="button" onClick={toggleChildren} >cancel</button>
       </form>
     </>
   );
