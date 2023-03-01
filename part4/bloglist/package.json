@@ -6,6 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "test:cover": "cross-env NODE_ENV=test jest --coverage --runInBand",
+    "test:e2e": "cross-env NODE_ENV=test node src/index.js",
     "start": "cross-env NODE_ENV=production node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js"
   },

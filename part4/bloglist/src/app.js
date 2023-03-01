@@ -9,6 +9,7 @@ const middleware = require('./utils/middleware');
 const blogRouter = require('./routes/blogRoute');
 const userRouter = require('./routes/userRoute');
 const loginRouter = require('./routes/loginRoute');
+const testingRouter = require('./routes/testingRoute');
 
 mongoose.set('strictQuery', false);
 
@@ -40,6 +41,9 @@ app.use(middleware.tokenExtractor);
 app.use('/api/blogs', middleware.userExtractor, blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/test', testingRouter);
+}
 
 // added middleware for unknown endpoint and error handler
 app.use(middleware.unknownEndpoint);
