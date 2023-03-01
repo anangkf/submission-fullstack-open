@@ -67,13 +67,22 @@ describe('Blog app', function() {
           url: 'www.ross-bardainen.com/blogs', 
           likes: 2
         });
-      })
+      });
+
       it('User can like a blog', function () {
         cy.get('.blog').contains('show').click();
         cy.get('[data-cy="likes"]').should('contain', 2);
         cy.get('[data-cy="like-btn"]').click();
         cy.get('[data-cy="likes"]').should('contain', 3);
       });
+
+      it('User who created the blog can delete it', function () {
+        cy.get('button').contains('show').click();
+        cy.contains('My First Blog');
+        cy.get('button').contains('remove').click();
+        cy.contains('My First Blog').should('not.exist');
+      })
+      
     });
   });
 });
