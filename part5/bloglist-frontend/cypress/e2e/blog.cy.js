@@ -33,5 +33,30 @@ describe('Blog app', function() {
         .should('have.css', 'border-bottom', '3px solid rgb(255, 17, 85)')
         .should('have.css', 'color', 'rgb(255, 17, 85)');
     });
-  })
+  });
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({username: 'johnDoe', password: 'johngantenk'});
+    });
+
+    it('A blog can be created', function() {
+      // toggle blog form
+      cy.contains('new blog').click();
+
+      // add a new blog
+      cy.get('#title').type('Testing with Cypress');
+      cy.get('#author').type('Florian Nordeus');
+      cy.get('#url').type('www.floriannordeus.com/blogs/testing-with-cypress');
+      cy.get('button[type=submit]').click();
+
+      // expect success notification to be shown
+      cy.contains('a new blog Testing with Cypress by Florian Nordeus added')
+        .should('have.css', 'border-bottom', '3px solid rgb(56, 204, 56)')
+        .and('have.css', 'color', 'rgb(56, 204, 56)');
+
+      // expect new blog to be added to list
+      cy.contains('Testing with Cypress Florian Nordeus');
+    });
+  });
 });
