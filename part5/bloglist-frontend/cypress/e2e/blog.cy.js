@@ -8,7 +8,14 @@ describe('Blog app', function() {
       password: 'johngantenk'
     };
 
+    const anotherUser = {
+      name: 'Peter Drury',
+      username: 'peter',
+      password: 'petergantenk'
+    };
+
     cy.request('POST', `${Cypress.env('BACKEND')}/users`, user);
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, anotherUser);
     cy.visit('');
   });
 
@@ -59,7 +66,7 @@ describe('Blog app', function() {
       cy.contains('Testing with Cypress Florian Nordeus');
     });
 
-    describe.only('when blogs exist', function () {
+    describe('when blogs exist', function () {
       beforeEach( function () {
         cy.createBlog({
           title: 'My First Blog', 
@@ -81,8 +88,36 @@ describe('Blog app', function() {
         cy.contains('My First Blog');
         cy.get('button').contains('remove').click();
         cy.contains('My First Blog').should('not.exist');
+      });
+    });
+
+    describe.only('when another user log in', function() {
+      beforeEach( function() {
+        cy.createBlog({
+          title: 'My First Blog', 
+          author: 'Ross Bardainen', 
+          url: 'www.ross-bardainen.com/blogs', 
+          likes: 2
+        });
+        cy.login({username: 'peter', password: 'petergantenk'});
+        cy.createBlog({
+          title: "Peter's Blog", 
+          author: 'Peter Drury', 
+          url: 'www.peter-drury.com/blogs', 
+          likes: 1
+        });
       })
       
-    });
+      it("user can't delete blog created by another user", function() {
+        cy.contains('John Doe').parent()
+          .contains('show').click();
+        cy.contains('John Doe').parent()
+          .should('not.contain', 'remove')
+        cy.contains('Peter Drury').parent()
+          .contains('show').click();
+        cy.contains('Peter Drury').parent()
+          .should('contain', 'remove')
+      })
+    })
   });
 });
