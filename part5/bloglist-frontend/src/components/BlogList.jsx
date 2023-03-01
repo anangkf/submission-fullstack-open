@@ -27,7 +27,8 @@ const BlogList = ({
       // eslint-disable-next-line no-shadow
       const newBlogs = blogs.map((blog) => {
         if (blog.id === res.data.id) {
-          return res.data;
+          const data = res.data;
+          return {...blog, ...data};
         } return blog;
       });
       setBlogs(newBlogs);

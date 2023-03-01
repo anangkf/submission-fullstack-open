@@ -33,9 +33,9 @@ const Blog = ({
       <div data-testid="blog-details" style={detailStyle}>
         <a href={blog.url}>{blog.url}</a>
         <div className='likes'>
-          {`likes ${blog.likes}`}
+          <span data-cy='likes'>{`likes ${blog.likes}`}</span>
           {' '}
-          <button type="button" disabled={loading} onClick={() => handleLike(blog)}>like</button>
+          <button type="button" data-cy='like-btn' disabled={loading} onClick={() => handleLike(blog)}>like</button>
         </div>
         {blog.user.name || usersName }
         <br />

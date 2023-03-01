@@ -58,5 +58,22 @@ describe('Blog app', function() {
       // expect new blog to be added to list
       cy.contains('Testing with Cypress Florian Nordeus');
     });
+
+    describe.only('when blogs exist', function () {
+      beforeEach( function () {
+        cy.createBlog({
+          title: 'My First Blog', 
+          author: 'Ross Bardainen', 
+          url: 'www.ross-bardainen.com/blogs', 
+          likes: 2
+        });
+      })
+      it('User can like a blog', function () {
+        cy.get('.blog').contains('show').click();
+        cy.get('[data-cy="likes"]').should('contain', 2);
+        cy.get('[data-cy="like-btn"]').click();
+        cy.get('[data-cy="likes"]').should('contain', 3);
+      });
+    });
   });
 });
