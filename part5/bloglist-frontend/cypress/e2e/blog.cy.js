@@ -91,7 +91,7 @@ describe('Blog app', function() {
       });
     });
 
-    describe.only('when another user log in', function() {
+    describe('when another user log in', function() {
       beforeEach( function() {
         cy.createBlog({
           title: 'My First Blog', 
@@ -106,7 +106,7 @@ describe('Blog app', function() {
           url: 'www.peter-drury.com/blogs', 
           likes: 1
         });
-      })
+      });
       
       it("user can't delete blog created by another user", function() {
         cy.contains('John Doe').parent()
@@ -117,7 +117,36 @@ describe('Blog app', function() {
           .contains('show').click();
         cy.contains('Peter Drury').parent()
           .should('contain', 'remove')
-      })
-    })
+      });
+    });
+
+    describe('When multiple blogs exist', function() {
+      beforeEach( function() {
+        cy.createBlog({
+          title: 'My First Blog', 
+          author: 'Ross Bardainen', 
+          url: 'www.ross-bardainen.com/blogs', 
+          likes: 2
+        });
+        cy.createBlog({
+          title: 'My Second Blog', 
+          author: 'Ross Bardainen', 
+          url: 'www.ross-bardainen.com/blogs', 
+          likes: 5
+        });
+        cy.createBlog({
+          title: 'My Third Blog',
+          author: 'Ross Bardainen', 
+          url: 'www.ross-bardainen.com/blogs', 
+          likes: 3
+        });
+      });
+
+      it('blogs are ordered according to likes with the blog with the most likes being first', function() {
+        cy.get('.blog').eq(0).should('contain', 'likes 5');
+        cy.get('.blog').eq(1).should('contain', 'likes 3');
+        cy.get('.blog').eq(2).should('contain', 'likes 2');
+      });
+    });
   });
 });
