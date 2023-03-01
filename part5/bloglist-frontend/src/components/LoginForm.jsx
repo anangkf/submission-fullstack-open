@@ -58,7 +58,7 @@ const LoginForm = ({ refetchToken, Notif }) => {
           />
         </label>
         <br />
-        <button type="submit">login</button>
+        <button id="login-btn" type="submit">login</button>
       </form>
     </>
   );
