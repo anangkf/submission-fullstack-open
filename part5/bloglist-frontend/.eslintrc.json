@@ -1,8 +1,10 @@
 {
     "env": {
         "browser": true,
+        "commonjs": true,
         "es2021": true,
-        "jest/globals": true
+        "jest/globals": true,
+        "cypress/globals": true
     },
     "extends": [
         "eslint:recommended",
@@ -18,10 +20,10 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react", "jest"
+        "react", "jest", "cypress"
     ],
     "rules": {
-      "linebreak-style": ["error", "windows"],
+      "linebreak-style": ["off"],
       "no-console": "off",
       "no-unused-vars": [
         "warn",
