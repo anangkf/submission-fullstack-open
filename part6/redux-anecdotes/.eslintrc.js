@@ -5,10 +5,8 @@ module.exports = {
     commonjs: true,
     'jest/globals': true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'airbnb-base',
+  extends: 'airbnb-base',
+  overrides: [
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -48,6 +46,14 @@ module.exports = {
     'no-console': 0,
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^',
+        varsIgnorePattern: '^',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
   settings: {
     react: {
