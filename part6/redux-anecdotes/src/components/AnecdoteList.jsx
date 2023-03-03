@@ -1,17 +1,17 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { upvote } from '../reducers/anecdoteReducer'
+import { upvote } from '../reducers/anecdoteSlice'
 
 const AnecdoteList = () => {
+  const dispatch = useDispatch()
   // eslint-disable-next-line no-shadow
   const anecdotes = useSelector(({ anecdotes, filter }) => {
     const filteredAnecdotes = filter
-      ? anecdotes.filter(({ content }) => content.toLowerCase().includes(filter.toLowerCase()))
+      ? anecdotes.filter(({ content }) => content.toLowerCase().includes(filter))
       : anecdotes
-    return filteredAnecdotes.sort((a, b) => b.votes - a.votes)
+    return filteredAnecdotes
   })
-
-  const dispatch = useDispatch()
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
   const vote = (id) => {
     dispatch(upvote(id))
@@ -19,7 +19,7 @@ const AnecdoteList = () => {
 
   return (
     <>
-      {anecdotes.map((anecdote) => (
+      {sortedAnecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
