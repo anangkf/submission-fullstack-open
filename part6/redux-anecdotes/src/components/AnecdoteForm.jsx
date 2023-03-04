@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { addAnecdote } from '../reducers/anecdoteSlice'
-import { pushNotif, removeNotif } from '../reducers/notifSlice'
+import { setNotification } from '../reducers/notifSlice'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -11,15 +11,12 @@ const AnecdoteForm = () => {
     e.preventDefault()
     try {
       const formData = new FormData(e.target)
-      const anecdote = formData.get('anecdote')
-      dispatch(addAnecdote(anecdote))
+      const content = formData.get('anecdote')
+      dispatch(addAnecdote({ content, votes: 0 }))
       // reset uncontrolled input using react useRef
       ref.current.value = ''
 
-      dispatch(pushNotif(`'${anecdote}' added to the list`))
-      setTimeout(() => {
-        dispatch(removeNotif())
-      }, 5000)
+      dispatch(setNotification(`'${content}' added to the list`, 5))
     } catch (error) {
       console.log(error)
     }

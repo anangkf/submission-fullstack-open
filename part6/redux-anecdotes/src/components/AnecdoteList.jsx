@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { upvote } from '../reducers/anecdoteSlice'
-import { pushNotif, removeNotif } from '../reducers/notifSlice'
+import { initializeAnecdotes, upvote } from '../reducers/anecdoteSlice'
+import { setNotification } from '../reducers/notifSlice'
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
@@ -14,17 +14,19 @@ const AnecdoteList = () => {
   })
   const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
-  const vote = async (id, content) => {
+  const vote = async (anecdote) => {
+    const { content } = anecdote
     try {
-      dispatch(upvote(id))
-      dispatch(pushNotif(`You voted '${content}'`))
-      setTimeout(() => {
-        dispatch(removeNotif())
-      }, 5000)
+      dispatch(upvote(anecdote))
+      dispatch(setNotification(`You voted '${content}'`, 5))
     } catch (error) {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    dispatch(initializeAnecdotes())
+  }, [])
 
   return (
     <>
@@ -35,7 +37,7 @@ const AnecdoteList = () => {
           </div>
           <div>
           has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
