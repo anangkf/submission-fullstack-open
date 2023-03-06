@@ -16,7 +16,7 @@ const service = {
       const res = await axios.post(baseUrl, data)
       return res.data
     } catch (error) {
-      throw new Error(error.message)
+      throw error
     }
   },
   vote: async (anecdote) => {
