@@ -1,7 +1,9 @@
+import { useContext } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import ErrorHandler from './components/ErrorHandler'
 import Notification from './components/Notification'
+import NotifContext from './context/NotifContext'
 import queryClient from './queries/queryClient'
 import anecdoteServices from './services/anecdoteServices'
 
@@ -11,7 +13,9 @@ const App = () => {
       retry: 1,
       refetchOnWindowFocus: false
     }
-    )
+  )
+
+  const { pushNotif } = useContext(NotifContext)
     
   const updateAnecdoteMutation = useMutation(anecdoteServices.vote, {
     onSuccess: (data, variables) => {
@@ -22,17 +26,17 @@ const App = () => {
   
   const handleVote = (anecdote) => {
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+    pushNotif(`anecdote '${anecdote.content}' voted`)
   }
-
+  
   if(isError) return <ErrorHandler service='anecdote' />
-
   return (
     <div>
       <h3>Anecdote app</h3>
     
       <Notification />
       <AnecdoteForm />
-    
+
       {anecdotes?.map(anecdote =>
         <div key={anecdote.id}>
           <div>
