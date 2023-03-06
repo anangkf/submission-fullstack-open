@@ -1,5 +1,8 @@
+import { useQuery } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
+import ErrorHandler from './components/ErrorHandler'
 import Notification from './components/Notification'
+import anecdoteServices from './services/anecdoteServices'
 
 const App = () => {
 
@@ -7,13 +10,13 @@ const App = () => {
     console.log('vote')
   }
 
-  const anecdotes = [
-    {
-      "content": "If it hurts, do it more often",
-      "id": "47145",
-      "votes": 0
-    },
-  ]
+  const { data: anecdotes, isError } = useQuery(
+    'anecdotes', anecdoteServices.getAll, {
+      retry: 1
+    }
+  )
+
+  if(isError) return <ErrorHandler service='anecdote' />
 
   return (
     <div>
@@ -22,7 +25,7 @@ const App = () => {
       <Notification />
       <AnecdoteForm />
     
-      {anecdotes.map(anecdote =>
+      {anecdotes?.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
