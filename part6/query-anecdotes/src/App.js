@@ -12,7 +12,8 @@ const App = () => {
 
   const { data: anecdotes, isError } = useQuery(
     'anecdotes', anecdoteServices.getAll, {
-      retry: 1
+      retry: 1,
+      refetchOnWindowFocus: false
     }
   )
 

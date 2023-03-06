@@ -10,6 +10,14 @@ const service = {
     } catch (error) {
       throw new Error(error.message)
     }
+  },
+  create: async (data) => {
+    try {
+      const res = await axios.post(baseUrl, data)
+      return res.data
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 };
 
