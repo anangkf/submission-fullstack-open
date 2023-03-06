@@ -1,21 +1,28 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import ErrorHandler from './components/ErrorHandler'
 import Notification from './components/Notification'
+import queryClient from './queries/queryClient'
 import anecdoteServices from './services/anecdoteServices'
 
-const App = () => {
-
-  const handleVote = (anecdote) => {
-    console.log('vote')
-  }
-
+const App = () => {  
   const { data: anecdotes, isError } = useQuery(
     'anecdotes', anecdoteServices.getAll, {
       retry: 1,
       refetchOnWindowFocus: false
     }
-  )
+    )
+    
+  const updateAnecdoteMutation = useMutation(anecdoteServices.vote, {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries('anecdotes')
+      // queryClient.setQueryData(['anecdotes', {id: variables.id}], data)
+    }
+  })
+  
+  const handleVote = (anecdote) => {
+    updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+  }
 
   if(isError) return <ErrorHandler service='anecdote' />
 

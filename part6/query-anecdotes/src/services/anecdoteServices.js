@@ -18,6 +18,14 @@ const service = {
     } catch (error) {
       throw new Error(error.message)
     }
+  },
+  vote: async (anecdote) => {
+    try {
+     const res = await axios.put(`${baseUrl}/${anecdote.id}`, anecdote) 
+     return res.data
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 };
 
