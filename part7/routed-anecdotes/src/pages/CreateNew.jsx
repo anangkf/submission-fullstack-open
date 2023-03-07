@@ -20,10 +20,16 @@ const CreateNew = (props) => {
     props.pushNotif(content.value)
   }
 
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset} >
         <div>
           content
           <input name='content' value={content.value} onChange={(e) => content.onChange(e)} />
@@ -36,7 +42,8 @@ const CreateNew = (props) => {
           url for more info
           <input name='info' value={info.value} onChange={(e)=> info.onChange(e)} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   )
