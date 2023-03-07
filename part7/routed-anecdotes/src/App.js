@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import CreateNew from './pages/CreateNew'
 import About from './pages/About'
 import AnecdoteDetail from './pages/AnecdoteDetail'
+import Notification from './components/Notification'
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -26,6 +27,11 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+
+  const pushNotif = (content) => {
+    setNotification(`a new anecdote '${content}' created!`)
+    setTimeout(() => setNotification(''), 2000)
+  }
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
@@ -50,10 +56,11 @@ const App = () => {
     <BrowserRouter>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification message={notification} />
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/about' element={<About />} />
-        <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route path='/create' element={<CreateNew addNew={addNew} pushNotif={pushNotif} />} />
         <Route path='/anecdotes/:id' element={<AnecdoteDetail anecdotes={anecdotes} />} />
       </Routes>
       <Footer />
