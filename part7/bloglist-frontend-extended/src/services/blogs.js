@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import axios from 'axios';
+import axios from "axios";
 
-const baseUrl = '/api/blogs';
+const baseUrl = "/api/blogs";
 
 const getAll = () => {
   const request = axios.get(baseUrl);
@@ -30,7 +30,11 @@ const edit = async ({ data, token }) => {
     },
   };
   try {
-    const res = await axios.put(`${baseUrl}/${id}`, { likes: data.likes }, reqConfig);
+    const res = await axios.put(
+      `${baseUrl}/${id}`,
+      { likes: data.likes },
+      reqConfig
+    );
     return res.data;
   } catch (error) {
     return error;
@@ -52,5 +56,8 @@ const remove = async ({ id, token }) => {
 };
 
 export default {
-  getAll, create, edit, remove,
+  getAll,
+  create,
+  edit,
+  remove,
 };

@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseURL = '/api/users';
-const baseURLLogin = '/api/login';
+const baseURL = "/api/users";
+const baseURLLogin = "/api/login";
 
 const authService = {
   login: async (data) => {

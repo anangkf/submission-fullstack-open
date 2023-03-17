@@ -1,10 +1,14 @@
-import React from 'react';
-import Cookies from 'js-cookie';
+import React from "react";
+import Cookies from "js-cookie";
 
 const BlogDetails = ({
-  blog, toggleChildren, loading, handleLike, handleDelete,
+  blog,
+  toggleChildren,
+  loading,
+  handleLike,
+  handleDelete,
 }) => {
-  const usersName = Cookies.get('name');
+  const usersName = Cookies.get("name");
 
   const deleteBlog = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
@@ -15,19 +19,29 @@ const BlogDetails = ({
   return (
     <div id="blog-details">
       <div id="title">
-        {blog.title}
-        {' '}
-        <button type="button" onClick={toggleChildren}>hide</button>
+        {blog.title}{" "}
+        <button type="button" onClick={toggleChildren}>
+          hide
+        </button>
       </div>
       <a href={blog.url}>{blog.url}</a>
       <div>
-        {`likes ${blog.likes}`}
-        {' '}
-        <button type="button" disabled={loading} onClick={() => handleLike(blog)}>like</button>
+        {`likes ${blog.likes}`}{" "}
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => handleLike(blog)}
+        >
+          like
+        </button>
       </div>
       {blog.author}
       <br />
-      {blog.user.name === usersName && <button type="button" disabled={loading} onClick={deleteBlog}>remove</button>}
+      {blog.user.name === usersName && (
+        <button type="button" disabled={loading} onClick={deleteBlog}>
+          remove
+        </button>
+      )}
     </div>
   );
 };

@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const INITIAL_BLOG_DATA = {
-  title: '',
-  author: '',
-  url: '',
+  title: "",
+  author: "",
+  url: "",
 };
 
-const BlogForm = ({
-  createBlog, toggleChildren,
-}) => {
+const BlogForm = ({ createBlog, toggleChildren }) => {
   const [blogData, setBlogData] = useState(INITIAL_BLOG_DATA);
   const { title, author, url } = blogData;
 
@@ -30,7 +28,7 @@ const BlogForm = ({
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '12px' }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: "12px" }}>
         <label htmlFor="title">
           title
           <input
@@ -65,7 +63,9 @@ const BlogForm = ({
         </label>
         <br />
         <button type="submit">create</button>
-        <button type="button" onClick={toggleChildren}>cancel</button>
+        <button type="button" onClick={toggleChildren}>
+          cancel
+        </button>
       </form>
     </>
   );

@@ -1,10 +1,10 @@
-import Cookies from 'js-cookie';
-import React, { useState } from 'react';
-import authService from '../services/auth.service';
+import Cookies from "js-cookie";
+import React, { useState } from "react";
+import authService from "../services/auth.service";
 
 const INITIAL_USER_DATA = {
-  username: '',
-  password: '',
+  username: "",
+  password: "",
 };
 
 const LoginForm = ({ refetchToken, Notif }) => {
@@ -23,12 +23,12 @@ const LoginForm = ({ refetchToken, Notif }) => {
     e.preventDefault();
     try {
       const authData = await authService.login(userData);
-      Cookies.set('token', authData.token);
-      Cookies.set('name', authData.name);
+      Cookies.set("token", authData.token);
+      Cookies.set("name", authData.name);
       refetchToken();
       setUserData(INITIAL_USER_DATA);
     } catch (error) {
-      Notif.error('wrong username or password');
+      Notif.error("wrong username or password");
     }
   };
 
@@ -58,7 +58,9 @@ const LoginForm = ({ refetchToken, Notif }) => {
           />
         </label>
         <br />
-        <button id="login-btn" type="submit">login</button>
+        <button id="login-btn" type="submit">
+          login
+        </button>
       </form>
     </>
   );
