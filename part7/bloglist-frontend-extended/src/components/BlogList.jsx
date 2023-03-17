@@ -34,6 +34,7 @@ const BlogList = ({ blogs, refetchToken, setBlogs, Notif }) => {
         return blog;
       });
       setBlogs(newBlogs);
+      Notif.success(`You voted '${blog.title}'`)
     } catch (error) {
       Notif.error(error.message);
       setLoading(false);

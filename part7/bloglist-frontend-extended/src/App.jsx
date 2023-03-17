@@ -4,6 +4,8 @@ import BlogList from "./components/BlogList";
 import blogService from "./services/blogs";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotification } from "./store/features/notifSlice";
 
 const INIT_NOTIF = {
   type: "",
@@ -13,29 +15,27 @@ const INIT_NOTIF = {
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [token, setToken] = useState(Cookies.get("token"));
-  const [notif, setNotif] = useState(INIT_NOTIF);
+  const notif = useSelector(state => state.notif)
+  const dispatch = useDispatch()
 
   const Notif = {
     info: (message) => {
-      setNotif({
+      dispatch(setNotification({
         type: "",
         message,
-      });
-      setTimeout(() => setNotif(INIT_NOTIF), 2500);
+      }))
     },
     success: (message) => {
-      setNotif({
+      dispatch(setNotification({
         type: "success",
         message,
-      });
-      setTimeout(() => setNotif(INIT_NOTIF), 2500);
+      }))
     },
     error: (message) => {
-      setNotif({
+      dispatch(setNotification({
         type: "error",
         message,
-      });
-      setTimeout(() => setNotif(INIT_NOTIF), 2500);
+      }))
     },
   };
 
