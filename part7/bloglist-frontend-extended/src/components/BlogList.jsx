@@ -1,15 +1,21 @@
 /* eslint-disable react/button-has-type */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
 import blogService from "../services/blogs";
+import { getAllBlogs } from "../store/features/blogSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const BlogList = ({ blogs, refetchToken, setBlogs, Notif }) => {
+const BlogList = ({ refetchToken, setBlogs, Notif }) => {
   const [loading, setLoading] = useState(false);
   const name = Cookies.get("name");
   const token = Cookies.get("token");
+  const blog = useSelector(state => state.blog)
+  const dispatch = useDispatch()
+
+  const blogs = [...blog].sort((a, b) => b.likes - a.likes)
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -55,15 +61,9 @@ const BlogList = ({ blogs, refetchToken, setBlogs, Notif }) => {
     }
   };
 
-  const createBlog = async (data) => {
-    try {
-      const res = await blogService.create({ data, token });
-      setBlogs([...blogs, res]);
-      Notif.success(`a new blog ${data.title} by ${data.author} added`);
-    } catch (error) {
-      Notif.error(error.message);
-    }
-  };
+  useEffect(() => {
+    dispatch(getAllBlogs())
+  }, []);
 
   return (
     <>
@@ -73,7 +73,7 @@ const BlogList = ({ blogs, refetchToken, setBlogs, Notif }) => {
         <button onClick={handleLogout}>logout</button>
       </p>
       <Togglable buttonLabel="new blog">
-        <BlogForm createBlog={createBlog} />
+        <BlogForm />
       </Togglable>
       {blogs.map((blog) => (
         <Blog

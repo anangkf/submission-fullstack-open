@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createBlog } from "../store/features/blogSlice";
 
 const INITIAL_BLOG_DATA = {
   title: "",
@@ -6,9 +8,10 @@ const INITIAL_BLOG_DATA = {
   url: "",
 };
 
-const BlogForm = ({ createBlog, toggleChildren }) => {
+const BlogForm = ({ toggleChildren }) => {
   const [blogData, setBlogData] = useState(INITIAL_BLOG_DATA);
   const { title, author, url } = blogData;
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +23,7 @@ const BlogForm = ({ createBlog, toggleChildren }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createBlog(blogData);
+    dispatch(createBlog(blogData));
     setBlogData(INITIAL_BLOG_DATA);
     toggleChildren();
   };
