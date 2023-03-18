@@ -64,4 +64,17 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, getAllUsers, userLogin };
+const getUserById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const data = await User.findById(id)
+      .populate('blogs', { user: 0 });
+    res.send(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  registerUser, getAllUsers, userLogin, getUserById,
+};
