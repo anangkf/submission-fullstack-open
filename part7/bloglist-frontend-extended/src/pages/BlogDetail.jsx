@@ -85,7 +85,7 @@ const BlogDetail = () => {
             remove
         </button>
       )}
-      <Comments comments={blog.comments} />
+      <Comments blog={blog} />
     </div>
   )
 }

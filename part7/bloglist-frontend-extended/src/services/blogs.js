@@ -64,10 +64,20 @@ const getById = async (id) => {
   }
 }
 
+const comment = async ({id, content}) => {
+  try {
+    const res = await axios.post(`${baseUrl}/${id}/comments`, {content})
+    return res.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export default {
   getAll,
   create,
   edit,
   remove,
-  getById
+  getById,
+  comment
 };
