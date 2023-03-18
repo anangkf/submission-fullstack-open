@@ -1,11 +1,14 @@
+/* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
+const Comment = require('../models/Comment');
 
 const getAllBlogs = async (req, res, next) => {
   try {
     const resp = await Blog.find()
-      .populate('user', { username: 1, name: 1 });
+      .populate('user', { username: 1, name: 1 })
+      .populate('comments', { blog: 0 });
 
     res.json({ count: resp.length, results: resp });
   } catch (err) {
@@ -88,13 +91,35 @@ const updateBlogByID = async (req, res, next) => {
 const getBlogById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const data = await Blog.findById(id).populate('user', { username: 1, name: 1 });
+    const data = await Blog.findById(id).populate('user', { username: 1, name: 1 }).populate('comments', { blog: 0 });
     res.send(data);
   } catch (err) {
-    throw new Error(err);
+    next(err);
+  }
+};
+
+// eslint-disable-next-line consistent-return
+const addComment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const blog = await Blog.findById(id).populate('comments', { blog: 0 });
+
+    if (!blog) {
+      return res.status(404).send({ error: `blog with id ${id} doesnt exist` });
+    }
+
+    const newComment = new Comment({ ...req.body, blog: id });
+    const data = await newComment.save();
+
+    blog.comments = [...blog.comments, newComment._id];
+    await blog.save();
+
+    res.status(201).json(data);
+  } catch (err) {
+    next(err);
   }
 };
 
 module.exports = {
-  getAllBlogs, createBlog, deleteBlogByID, updateBlogByID, getBlogById,
+  getAllBlogs, createBlog, deleteBlogByID, updateBlogByID, getBlogById, addComment,
 };

@@ -17,6 +17,7 @@ const unknownEndpoint = (req, res) => {
 // eslint-disable-next-line consistent-return
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message);
+  logger.error(err.stack);
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
@@ -46,7 +47,7 @@ const tokenExtractor = (req, res, next) => {
 
 // eslint-disable-next-line consistent-return
 const userExtractor = async (req, res, next) => {
-  if (req.method !== 'GET') {
+  if (!(req.method === 'GET' || req.path.includes('comments'))) {
     const decodedToken = jwt.verify(req.token, process.env.SECRET, (err, decoded) => {
       // handle expired token
       if (err) {

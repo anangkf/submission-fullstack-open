@@ -25,6 +25,10 @@ const blogSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+  }],
 });
 
 const Blog = mongoose.model('Blog', blogSchema);

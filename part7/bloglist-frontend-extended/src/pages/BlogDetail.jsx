@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Comments from '../components/Comments'
 import { deleteBlog, getAllBlogs, like } from '../store/features/blogSlice'
 import { setNotification } from '../store/features/notifSlice'
 
@@ -11,7 +12,8 @@ const INIT_BLOG = {
   url: '',
   likes: 0,
   author: '',
-  user: {}
+  user: {},
+  comments: []
 }
 
 const BlogDetail = () => {
@@ -83,6 +85,7 @@ const BlogDetail = () => {
             remove
         </button>
       )}
+      <Comments comments={blog.comments} />
     </div>
   )
 }
