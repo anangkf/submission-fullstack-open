@@ -10,15 +10,14 @@ const Layout = () => {
   const notif = useSelector(state => state.notif)
 
   return (
-    <>
-      {name && 
-        <>
-          <Navigation />
-          <Notification type={notif.type} message={notif.message} />
-          <h2>blogs</h2>
-        </>}
-      <Outlet />
-    </>
+    <div>
+      {name && <Navigation />}
+      <div className='container-2xl px-2 w-full flex flex-col gap-3 p-2'>
+        <Notification type={notif.type} message={notif.message} />
+        <h2 className='text-xl font-bold'>blogs</h2>
+        <Outlet />
+      </div>
+    </div>
   )
 }
 

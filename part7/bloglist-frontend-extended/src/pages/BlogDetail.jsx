@@ -65,26 +65,29 @@ const BlogDetail = () => {
 
   return (
     <div>
-      <h2>{blog.title}{blog.author}</h2>
-      <Link to={blog.url} >{blog.url}</Link><br />
-      <div className="likes">
-        <span data-cy="likes">{`likes ${blog.likes}`}</span>{" "}
-        <button
-          type="button"
-          data-cy="like-btn"
-          disabled={loading}
-          onClick={() => handleLike(blog)}
-        >
+      <div className='my-2 border-2 border-gray-300 rounded-sm p-2'>
+        <h2 className='text-xl font-bold'>{blog.title}{blog.author}</h2>
+        <Link className="text-sky-800 hover:underline" to={blog.url} >{blog.url}</Link><br />
+        <div className="likes">
+          <span data-cy="likes">{`likes ${blog.likes}`}</span>{" "}
+          <button
+            className="bg-blue-400 hover:bg-blue-500 px-2 rounded-sm my-2"
+            type="button"
+            data-cy="like-btn"
+            disabled={loading}
+            onClick={() => handleLike(blog)}
+          >
             like
-        </button>
-      </div>
-      <span>added by {blog.user.name || usersName}</span>
-      <br />
-      {blog.user.name === usersName && (
-        <button type="button" disabled={loading} onClick={() => handleDelete(blog.id)}>
+          </button>
+        </div>
+        <span>added by <span className='font-semibold'>{blog.user.name || usersName}</span></span>
+        <br />
+        {blog.user.name === usersName && (
+          <button className='bg-red-danger hover:bg-red-danger-darken px-2 rounded-sm my-2' type="button" disabled={loading} onClick={() => handleDelete(blog.id)}>
             remove
-        </button>
-      )}
+          </button>
+        )}
+      </div>
       <Comments blog={blog} />
     </div>
   )

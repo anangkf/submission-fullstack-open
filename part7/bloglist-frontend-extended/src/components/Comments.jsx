@@ -18,14 +18,14 @@ const Comments = ({blog}) => {
 
   return (
     <div>
-      <h3>comments</h3>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={content} onChange={handleChange} />
-        <button type="submit">add comment</button>
+      <h3 className='text-lg font-bold'>comments</h3>
+      <form onSubmit={handleSubmit} className='flex gap-2 items-center'>
+        <input className="border-2 border-gray-700 rounded-md px-1" type="text" value={content} onChange={handleChange} />
+        <button className="bg-blue-400 hover:bg-blue-500 px-2 rounded-sm my-2" type="submit">add comment</button>
       </form>
       <ul>
         {blog.comments.map((comment) => (
-          <li key={comment.id} >{comment.content}</li>
+          <li key={comment.id} className='px-2 bg-gray-200 my-2 rounded-sm w-max'>{comment.content}</li>
         ))}
       </ul>
     </div>

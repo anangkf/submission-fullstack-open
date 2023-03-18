@@ -28,11 +28,11 @@ const Navigation = () => {
   };
 
   return (
-    <div className={styles.navigation}>
+    <div className='flex items-center bg-lilac p-2 gap-2'>
       <nav>
         <ul className={styles.navWrapper}>
           {navs.map((nav) => (
-            <li key={nav.id} className={styles.navlist} >
+            <li key={nav.id} className='hover:text-red-700 underline underline-offset-2' >
               <Link to={nav.path} >{nav.label}</Link>
             </li>
           ))}
@@ -41,7 +41,7 @@ const Navigation = () => {
       <span>
         {`${name} logged in`}
       </span>
-      <button onClick={handleLogout}>logout</button>
+      <button className='bg-red-danger hover:bg-red-danger-darken px-2 rounded-sm' onClick={handleLogout}>logout</button>
     </div>
   )
 }

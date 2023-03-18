@@ -4,7 +4,7 @@ import UserList from '../components/UserList'
 const Users = () => {
   return (
     <div>
-      <h2>Users</h2>
+      <h2 className='text-xl font-bold'>Users</h2>
       <UserList />
     </div>
   )

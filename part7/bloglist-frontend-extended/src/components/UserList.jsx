@@ -13,11 +13,11 @@ const UserList = () => {
   }, [])
 
   return (
-    <table>
+    <table className='w-1/2 border border-collapse'>
       <thead>
-        <tr>
-          <td></td>
-          <td><b>blogs created</b></td>
+        <tr className='border border-collapse'>
+          <td className='p-2'></td>
+          <td className='p-2'><b>blogs created</b></td>
         </tr>
       </thead>
       <tbody>

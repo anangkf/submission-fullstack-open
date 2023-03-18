@@ -23,7 +23,7 @@ const Togglable = ({ buttonLabel = "toggle", children, toggleHeader }) => {
     return childrenWithProps;
   }
   return (
-    <button type="button" onClick={toggleChildren}>
+    <button className="bg-green-400 px-2 rounded-sm my-2" type="button" onClick={toggleChildren}>
       {buttonLabel}
     </button>
   );

@@ -32,45 +32,47 @@ const BlogForm = ({ toggleChildren }) => {
 
   return (
     <>
-      <h2>create new</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "12px" }}>
+      <h2 className="text-xl font-bold">create new</h2>
+      <form className="flex flex-col items-start mt-px w-max" onSubmit={handleSubmit} style={{ marginBottom: "12px" }}>
         <label htmlFor="title">
           title
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={title}
-            onChange={handleChange}
-          />
         </label>
-        <br />
+        <input
+          className="border-2 border-gray-700 rounded-md px-1"
+          type="text"
+          name="title"
+          id="title"
+          value={title}
+          onChange={handleChange}
+        />
         <label htmlFor="author">
           author
-          <input
-            type="text"
-            name="author"
-            id="author"
-            value={author}
-            onChange={handleChange}
-          />
         </label>
-        <br />
+        <input
+          className="border-2 border-gray-700 rounded-md px-1"
+          type="text"
+          name="author"
+          id="author"
+          value={author}
+          onChange={handleChange}
+        />
         <label htmlFor="url">
           url
-          <input
-            type="text"
-            name="url"
-            id="url"
-            value={url}
-            onChange={handleChange}
-          />
         </label>
-        <br />
-        <button type="submit">create</button>
-        <button type="button" onClick={toggleChildren}>
+        <input
+          className="border-2 border-gray-700 rounded-md px-1"
+          type="text"
+          name="url"
+          id="url"
+          value={url}
+          onChange={handleChange}
+        />
+        <div className="flex gap-2 justify-end px-2 w-full" >
+          <button className="bg-blue-400 hover:bg-blue-500 px-2 rounded-sm my-2" type="submit">create</button>
+          <button className="bg-red-danger hover:bg-red-danger-darken px-2 rounded-sm my-2" type="button" onClick={toggleChildren}>
           cancel
-        </button>
+          </button>
+        </div>
       </form>
     </>
   );

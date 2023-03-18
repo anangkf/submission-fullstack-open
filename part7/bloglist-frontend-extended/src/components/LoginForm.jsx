@@ -37,36 +37,36 @@ const LoginForm = () => {
   };
 
   return (
-    <>
-      <h2>log in to application</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center h-[90vh] gap-2">
+      <h2 className="text-xl font-bold">log in to application</h2>
+      <form className="flex flex-col w-max" onSubmit={handleSubmit}>
         <label htmlFor="username">
           username
-          <input
-            type="text"
-            name="username"
-            id="username"
-            value={username}
-            onChange={handleChange}
-          />
         </label>
-        <br />
+        <input
+          className="border-2 border-gray-700 rounded-md px-1"
+          type="text"
+          name="username"
+          id="username"
+          value={username}
+          onChange={handleChange}
+        />
         <label htmlFor="password">
           password
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={handleChange}
-          />
         </label>
-        <br />
-        <button id="login-btn" type="submit">
+        <input
+          className="border-2 border-gray-700 rounded-md px-1"
+          type="password"
+          name="password"
+          id="password"
+          value={password}
+          onChange={handleChange}
+        />
+        <button className="bg-blue-400 hover:bg-blue-500 px-2 rounded-sm my-2" id="login-btn" type="submit">
           login
         </button>
       </form>
-    </>
+    </div>
   );
 };
 
