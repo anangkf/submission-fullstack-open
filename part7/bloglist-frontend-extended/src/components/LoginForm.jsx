@@ -1,15 +1,19 @@
 import Cookies from "js-cookie";
 import React, { useState } from "react";
-import authService from "../services/auth.service";
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from "../store/features/authSlice";
+import { setNotification } from '../store/features/notifSlice'
 
 const INITIAL_USER_DATA = {
   username: "",
   password: "",
 };
 
-const LoginForm = ({ refetchToken, Notif }) => {
+const LoginForm = () => {
   const [userData, setUserData] = useState(INITIAL_USER_DATA);
   const { username, password } = userData;
+  const {name, token} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,13 +26,13 @@ const LoginForm = ({ refetchToken, Notif }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const authData = await authService.login(userData);
-      Cookies.set("token", authData.token);
-      Cookies.set("name", authData.name);
-      refetchToken();
+      // const authData = await authService.login(userData);
+      dispatch(login(userData))
+      Cookies.set("token", token);
+      Cookies.set("name", name);
       setUserData(INITIAL_USER_DATA);
     } catch (error) {
-      Notif.error("wrong username or password");
+      dispatch(setNotification({type: 'error', message: "wrong username or password"}))
     }
   };
 

@@ -6,18 +6,18 @@ import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
 import { getAllBlogs } from "../store/features/blogSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/features/authSlice";
 
-const BlogList = ({ refetchToken }) => {
-  const name = Cookies.get("name");
+const BlogList = () => {
+  const name = useSelector(state => state.auth.name) || Cookies.get('name')
   const blog = useSelector(state => state.blog)
   const dispatch = useDispatch()
 
   const blogs = [...blog].sort((a, b) => b.likes - a.likes)
 
   const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("name");
-    refetchToken();
+    dispatch(logout())
+    window.location.href = '/'
   };
 
   useEffect(() => {
