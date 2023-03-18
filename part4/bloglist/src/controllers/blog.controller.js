@@ -85,6 +85,16 @@ const updateBlogByID = async (req, res, next) => {
   }
 };
 
+const getBlogById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const data = await Blog.findById(id).populate('user', { username: 1, name: 1 });
+    res.send(data);
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 module.exports = {
-  getAllBlogs, createBlog, deleteBlogByID, updateBlogByID,
+  getAllBlogs, createBlog, deleteBlogByID, updateBlogByID, getBlogById,
 };

@@ -55,9 +55,19 @@ const remove = async ({ id, token }) => {
   }
 };
 
+const getById = async (id) => {
+  try {
+    const res = await axios.get(`${baseUrl}/${id}`)
+    return res.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export default {
   getAll,
   create,
   edit,
   remove,
+  getById
 };

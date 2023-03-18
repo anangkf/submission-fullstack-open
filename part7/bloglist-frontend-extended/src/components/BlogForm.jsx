@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createBlog } from "../store/features/blogSlice";
+import { setNotification } from "../store/features/notifSlice";
 
 const INITIAL_BLOG_DATA = {
   title: "",
@@ -23,7 +24,8 @@ const BlogForm = ({ toggleChildren }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createBlog(blogData));
+    dispatch(createBlog(blogData))
+      .then(() => dispatch(setNotification({type: 'success', message: `addedd ${blogData.title} by ${blogData.author}!`})));
     setBlogData(INITIAL_BLOG_DATA);
     toggleChildren();
   };
