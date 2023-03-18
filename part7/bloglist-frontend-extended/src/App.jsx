@@ -44,7 +44,6 @@ const App = () => {
       ) : (
         <BlogList
           refetchToken={refetchToken}
-          Notif={Notif}
         />
       )}
     </div>

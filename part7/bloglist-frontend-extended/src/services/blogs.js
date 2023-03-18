@@ -37,7 +37,7 @@ const edit = async ({ data, token }) => {
     );
     return res.data;
   } catch (error) {
-    return error;
+    throw new Error(error);
   }
 };
 
