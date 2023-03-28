@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import React, { useState } from 'react'
 import { SET_AUTHOR_BIRTH } from '../queries/mutations'
 import { ALL_AUTHORS } from '../queries/queries'
@@ -15,12 +15,9 @@ const EditAuthor = () => {
     onError: (error) => {
       console.error(error)
     },
-    onCompleted: (res) => {
-      if (res.editAuthor === null) {
-        alert('Author not found!')
-      }
-    }
   })
+
+  const authors = useQuery(ALL_AUTHORS)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,10 +39,12 @@ const EditAuthor = () => {
       <h2>Set birthyear</h2>
 
       <form onSubmit={handleSubmit}>
-        <label htmlFor='name'>
-          name
-          <input type='text' name='name' value={formData.name} onChange={handleChange} id='name' />
-        </label><br />
+        <label htmlFor="name">name</label>
+        <select onChange={handleChange} value={formData.name} name="name" id="name">
+          {authors.data?.results.map((author) => (
+            <option key={author.id} value={author.name}>{author.name}</option>
+          ))}
+        </select><br />
         <label htmlFor='born'>
           born
           <input type='number' name='born' value={formData.born} onChange={handleChange} id='born' />
