@@ -131,7 +131,7 @@ const typeDefs = `
   }
 
   type Query {
-    allBooks(name: String): [Book!]!
+    allBooks(name: String, genre: String): [Book!]!
   }
 `
 
@@ -142,6 +142,9 @@ const resolvers = {
     allBooks: (root, args) => {
       if(args.name) {
         return books.filter((book) => book.author === args.name)
+      }
+      if(args.genre) {
+        return books.filter((book) => book.genres.includes(args.genre))
       }
       return books
     },
