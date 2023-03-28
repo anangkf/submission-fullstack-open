@@ -98,9 +98,28 @@ let books = [
 */
 
 const typeDefs = `
+  enum Genres {
+    refactoring
+    agile
+    patterns
+    design
+    classic
+    crime
+    revolution
+  }
+
+  type Book {
+    title: String!
+    published: Int!
+    author: String!
+    id: ID!
+    genres: [Genres!]!
+  }  
+
   type Query {
     bookCount: Int
     authorCount: Int
+    allBooks: [Book!]!
   }
 `
 
@@ -108,6 +127,7 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
+    allBooks: () => books,
   }
 }
 
