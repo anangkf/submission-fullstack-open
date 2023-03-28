@@ -144,6 +144,13 @@ const typeDefs = `
       genres: [Genres!]!
     ): Book
   }
+
+  type Mutation {
+    editAuthor(
+      name: String!,
+      setBornTo: Int!
+    ): Author
+  }
 `
 
 const resolvers = {
@@ -173,6 +180,15 @@ const resolvers = {
         authors = [...authors, {id: uuid(), name: args.author}]
       }
       return book
+    },
+    editAuthor: (root, args) => {
+      authors = authors.map((author) => {
+        if(author.name === args.name) {
+          return {...author, born: args.setBornTo}
+        }
+        return author
+      })
+      return authors.find((author) => author.name === args.name)
     }
   }
 }
