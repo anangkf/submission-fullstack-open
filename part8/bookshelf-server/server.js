@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
+const { startStandaloneServer } = require('@apollo/server/standalone');
+const { GraphQLError } = require('graphql');
 const Author = require('./src/model/Author');
 const Book = require('./src/model/Book');
 
@@ -71,6 +72,23 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
+      if (args.title.length < 5) {
+        throw new GraphQLError('Name must be at least 5 characters', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title
+          }
+        })
+      }
+      if (args.author.length < 4) {
+        throw new GraphQLError('Author\'s name must be at least 4 characters', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.author
+          }
+        })
+      }
+
       const isAuthorExist = await Author.findOne({name: args.author})
       let newAuthor;
       if (!isAuthorExist) {
