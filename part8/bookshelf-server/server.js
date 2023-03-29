@@ -1,6 +1,5 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid');
 const Author = require('./src/model/Author');
 const Book = require('./src/model/Book');
 
@@ -55,26 +54,19 @@ const resolvers = {
   Query: {
     bookCount: async () => await Book.collection.countDocuments(),
     authorCount: async () => await Author.collection.countDocuments(),
-    // allBooks: (root, args) => {
-    //   if(args.name) {
-    //     return books.filter((book) => book.author === args.name)
-    //   }
-    //   if(args.genre) {
-    //     return books.filter((book) => book.genres.includes(args.genre))
-    //   }
-    //   return books
-    // },
-    allBooks: async () => {
-      return await Book.find({})
+    allBooks: async (root, args) => {
+      let books = await Book.find({})
         .populate('author')
+      if(args.name) {
+        books = books.filter((book) => book.author.name === args.name)
+      }
+      if(args.genre) {
+        books = books.filter((book) => book.genres.includes(args.genre))
+      }
+      return books
     },
-    // allAuthors: () => authors.map((author) => {
-    //   const bookCount = books.filter((book) => book.author === author.name).length
-    //   return {...author, bookCount}
-    // }),
     allAuthors: async () => {
-      return await Author.find({})
-        .populate('books')
+      return await Author.find({}).populate('books')
     },
   },
   Mutation: {
@@ -91,14 +83,11 @@ const resolvers = {
 
       return book.populate('author')
     },
-    editAuthor: (root, args) => {
-      authors = authors.map((author) => {
-        if(author.name === args.name) {
-          return {...author, born: args.setBornTo}
-        }
-        return author
-      })
-      return authors.find((author) => author.name === args.name)
+    editAuthor: async (root, args) => {
+      let author = await Author.findOne({name: args.name})
+      if (!author) return
+      author.born = args.setBornTo
+      return author.save()
     }
   }
 }
