@@ -1,8 +1,10 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const { GraphQLError } = require('graphql');
+const jwt = require('jsonwebtoken');
 const Author = require('./src/model/Author');
 const Book = require('./src/model/Book');
+const User = require('./src/model/User');
 
 // connecting to db
 require('./src/config/mongo');
@@ -23,6 +25,16 @@ const typeDefs = `
     books: [Book!]
   }
 
+  type User {
+    id: ID!
+    username: String!
+    favoriteGenre: String!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
     bookCount: Int
     authorCount: Int
@@ -32,6 +44,7 @@ const typeDefs = `
 
   type Query {
     allBooks(name: String, genre: String): [Book!]!
+    me: User
   }
 
   type Mutation {
@@ -41,13 +54,21 @@ const typeDefs = `
       published: Int!, 
       genres: [String!]!
     ): Book
-  }
-
-  type Mutation {
+    
     editAuthor(
       name: String!,
       setBornTo: Int!
     ): Author
+
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 
@@ -69,9 +90,27 @@ const resolvers = {
     allAuthors: async () => {
       return await Author.find({}).populate('books')
     },
+    me: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('invalid jwt', {
+          extensions: {
+            code: 'UNAUTHORIZED',
+          }
+        })
+      }
+      return currentUser
+    }
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('invalid jwt', {
+          extensions: {
+            code: 'UNAUTHORIZED',
+          }
+        })
+      }
+
       if (args.title.length < 5) {
         throw new GraphQLError('Name must be at least 5 characters', {
           extensions: {
@@ -101,12 +140,42 @@ const resolvers = {
 
       return book.populate('author')
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('invalid jwt', {
+          extensions: {
+            code: 'UNAUTHORIZED',
+          }
+        })
+      }
+
       let author = await Author.findOne({name: args.name})
       if (!author) return
       author.born = args.setBornTo
       return author.save()
-    }
+    },
+    createUser: async (root, args) => {
+      const user = new User({...args})
+      const savedUser = await user.save()
+      return savedUser
+    },
+    login: async (root, { username, password }) => {
+      const user = await User.findOne({ username })
+      if (!user || password !== 'password123') {
+        throw new GraphQLError('invalid credentials', {
+          extensions: {
+            code: 'UNAUTHORIZED',
+            invalidArgs: user ? password : username
+          }
+        })
+      }
+      const userForToken = {
+        username,
+        id: user.id
+      }
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
   }
 }
 
@@ -117,6 +186,17 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.startsWith('Bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.JWT_SECRET
+      )
+      const currentUser = await User
+        .findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`)
 })
