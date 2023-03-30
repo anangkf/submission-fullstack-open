@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ADD_BOOK } from '../queries/mutations'
 import { ALL_AUTHORS, ALL_BOOKS } from '../queries/queries'
 
-const NewBook = (props) => {
+const NewBook = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -13,13 +13,12 @@ const NewBook = (props) => {
   const [ addBook ] = useMutation(ADD_BOOK, {
     refetchQueries: [{query: ALL_BOOKS}, {query: ALL_AUTHORS}],
     onError: (error) => {
-      console.error(error)
+      alert(error?.graphQLErrors[0].message)
+    },
+    onCompleted: (res) => {
+      alert(`${res.addBook.title} added to the list`)
     }
   })
-
-  if (!props.show) {
-    return null
-  }
 
   const submit = async (event) => {
     event.preventDefault()
