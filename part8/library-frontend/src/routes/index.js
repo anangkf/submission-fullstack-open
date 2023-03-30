@@ -7,6 +7,7 @@ import Authors from '../components/Authors'
 import Books from '../components/Books'
 import LoginForm from '../components/LoginForm'
 import NewBook from '../components/NewBook'
+import Recommend from '../components/Recommend'
 
 const SetupRouter = () => {
   return (
@@ -19,6 +20,7 @@ const SetupRouter = () => {
         {/* private routes */}
         <Route path='/' element={<PrivateRoute />}>
           <Route path='add' element={<NewBook />} />
+          <Route path='recommend' element={<Recommend />} />
         </Route>
         {/* open routes */}
         <Route path='/' element={<OpenRoute />}>

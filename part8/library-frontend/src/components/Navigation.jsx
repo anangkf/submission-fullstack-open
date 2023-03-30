@@ -16,7 +16,12 @@ const Navigation = () => {
     <div style={{ paddingBottom: 20 }}>
       <button onClick={() => navigate('/authors')}>authors</button>
       <button onClick={() => navigate('/books')}>books</button>
-      {authStatus && <button onClick={() => navigate('/add')}>add book</button>}
+      {authStatus && 
+        <>
+          <button onClick={() => navigate('/add')}>add book</button>
+          <button onClick={() => navigate('/recommend')}>recommend</button>
+        </>
+      }
       <button onClick={handleAuth}>
         {authStatus ? 'logout' : 'login'}
       </button>
