@@ -11,12 +11,27 @@ const NewBook = () => {
   const [genres, setGenres] = useState([])
 
   const [ addBook ] = useMutation(ADD_BOOK, {
-    refetchQueries: [{query: ALL_BOOKS}, {query: ALL_AUTHORS}],
+    // refetchQueries: [{query: ALL_BOOKS}, {query: ALL_AUTHORS}],
     onError: (error) => {
       alert(error?.graphQLErrors[0].message)
     },
     onCompleted: (res) => {
       alert(`${res.addBook.title} added to the list`)
+    },
+    update: (cache, res) => {
+      cache.updateQuery({ query: ALL_BOOKS }, ({ results }) => {
+        return {
+          results: [ ...results, res.data.addBook ]
+        }
+      })
+      cache.updateQuery({ query: ALL_AUTHORS }, ({ results }) => {
+        const isAuthorExist = results.find((author) => author.name === res.data.addBook.author.name)
+        if (!isAuthorExist) {
+          return {
+            results: [ ...results, res.data.addBook.author ]
+          }
+        }
+      })
     }
   })
 
