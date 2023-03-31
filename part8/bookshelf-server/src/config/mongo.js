@@ -8,3 +8,4 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('connected to mongodb'))
   .catch((err) => console.error('error connecting to db', err.message));
 
+mongoose.set('debug', true)

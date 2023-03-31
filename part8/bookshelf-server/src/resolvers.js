@@ -36,6 +36,14 @@ const resolvers = {
       return currentUser
     }
   },
+  Author: {
+    // add a field that doent exist on db
+    booksCount: (root) => {
+      // it didnt make a redundant queries to the database because it took count from author.books.length
+      // we author.books from populating the object id stored in the author.books (id) array
+      return root.books.length
+    }
+  },
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
       if (!currentUser) {

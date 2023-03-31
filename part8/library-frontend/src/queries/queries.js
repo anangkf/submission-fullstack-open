@@ -6,6 +6,7 @@ export const ALL_AUTHORS = gql`
       id
       name
       born
+      booksCount
       books {
         id
         title
