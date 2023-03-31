@@ -40,3 +40,18 @@ export const ME = gql`
     }
   }
 `;
+
+export const BOOK_SUBSCRIPTION = gql`
+  subscription BookAdded {
+    bookAdded {
+      id
+      title
+      published
+      author {
+        name
+        born
+      }
+      genres
+    }
+  }
+`;

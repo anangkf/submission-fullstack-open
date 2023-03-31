@@ -1,12 +1,13 @@
-import { useLazyQuery, useQuery } from "@apollo/client"
-import { useState } from "react"
-import { ALL_BOOKS } from "../queries/queries"
+import { useLazyQuery, useQuery, useSubscription } from "@apollo/client"
+import { useEffect, useState } from "react"
+import { ALL_BOOKS, BOOK_SUBSCRIPTION } from "../queries/queries"
 
 const Books = () => {
   const [ filter, setFilter ] = useState(false)
   const { data, loading } = useQuery(ALL_BOOKS)
   const [ filterBooks, { data: filteredBooks, loading: filterLoading } ] = useLazyQuery(ALL_BOOKS)
   const loadingState = loading || filterLoading
+  const {data: subsData} = useSubscription(BOOK_SUBSCRIPTION)
 
   const books = data?.results
 
@@ -21,6 +22,12 @@ const Books = () => {
     setFilter(true)
     filterBooks({ variables: { genre } })
   }
+
+  useEffect(() => {
+    if (subsData) {
+      alert(`a new book, '${subsData.bookAdded.title}' is added!`)
+    }
+  }, [subsData])
 
   return (
     <div>
