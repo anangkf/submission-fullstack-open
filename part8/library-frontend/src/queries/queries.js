@@ -48,6 +48,7 @@ export const BOOK_SUBSCRIPTION = gql`
       title
       published
       author {
+        id
         name
         born
       }
