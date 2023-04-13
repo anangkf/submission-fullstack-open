@@ -49,7 +49,7 @@ const calculateExercises = (): ExerciseResults => {
 
     return { periodLength, trainingDays, success, rating, ratingDescription, target, average }
   } catch (error) {
-    console.log(`Something bad happened: ${error.message}`)
+    throw(error)
   }
 };
 
@@ -65,12 +65,10 @@ function parseArgs ( args: string[] ): ExerciseArgs {
     throw new Error('First arguments should be number (target)')
   }
 
-  if (Array.isArray(exerciseHours) && isNumber(target)) {
-    return {
-      exerciseHours,
-      target: Number(target)
-    }
-  } 
+  return {
+    exerciseHours,
+    target: Number(target)
+  }
 }
 
 console.log(calculateExercises());

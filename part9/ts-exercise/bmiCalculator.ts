@@ -23,19 +23,21 @@ const calculateBmi = (): string => {
   try {
     const { height, weight } = parseArgs(process.argv)
     const bmi = weight / Math.pow(height/100, 2)
-
+    let result: string;
+    
     switch (true) {
       case (bmi < 18.5):
-        return BMI.underweight;
+        result =  BMI.underweight;
       case (bmi <= 24.9):
-        return BMI.normal;
+        result =  BMI.normal;
       case (bmi <= 29.9):
-        return BMI.overweight;
+        result =  BMI.overweight;
       default:
-        return BMI.obesity;
+        result =  BMI.obesity;
     } 
+    return result
   } catch (error) {
-    console.log(`Something bad happened: ${error.message}`)
+    throw(error)
   }
 }
 
