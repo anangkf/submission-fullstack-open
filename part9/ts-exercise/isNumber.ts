@@ -1,3 +1,5 @@
-export const isNumber = ( value: any ): boolean => {
-  return !isNaN(Number(value))
-}
+type isNumberArgsType = string | number;
+
+export const isNumber = ( value: isNumberArgsType ): boolean => {
+  return !isNaN(Number(value));
+};
