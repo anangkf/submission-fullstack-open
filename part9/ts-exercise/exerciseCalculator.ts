@@ -1,6 +1,6 @@
 import { isNumber } from "./isNumber";
 
-interface ExerciseResults {
+export interface ExerciseResults {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -10,8 +10,8 @@ interface ExerciseResults {
   average: number;
 }
 
-type ExerciseArgs = {
-  exerciseHours: number[];
+export type ExerciseArgsType = {
+  daily_exercises: number[];
   target: number;
 };
 
@@ -21,14 +21,14 @@ const RATING_DESCRIPTION = {
   EXCELLENT: 'Wooh, you did exercise more than you planned. Well done!',
 };
 
-const calculateExercises = (): ExerciseResults => {
-  const { exerciseHours, target } = parseArgs(process.argv);
+export const calculateExercises = (dailyExercisesInput: number[], targetInput: number): ExerciseResults => {
+  const { daily_exercises, target } = parseArgs(dailyExercisesInput, targetInput);
   let rating;
   let ratingDescription;
   
-  const periodLength = exerciseHours.length;
-  const trainingDays = (exerciseHours.filter((exc) => exc !== 0)).length;
-  const totalHours = exerciseHours.reduce((total: number, hours: number) => total + hours, 0);
+  const periodLength = daily_exercises.length;
+  const trainingDays = (daily_exercises.filter((exc) => exc !== 0)).length;
+  const totalHours = daily_exercises.reduce((total: number, hours: number) => total + hours, 0);
   const average = Number((totalHours / periodLength).toFixed());
   const success = average >= target;
 
@@ -49,22 +49,18 @@ const calculateExercises = (): ExerciseResults => {
   return { periodLength, trainingDays, success, rating, ratingDescription, target, average };
 };
 
-function parseArgs ( args: string[] ): ExerciseArgs {
-  if (args.length < 4) throw new Error('Not enough arguments');
-  const [ , , target, ...exercises ] = args;
-  const exerciseHours = exercises.map((hour) => Number(hour));
+function parseArgs (dailyExercisesInput: number[], targetInput: number): ExerciseArgsType {
+  const daily_exercises = dailyExercisesInput.map((hour) => Number(hour));
   
-  if (exerciseHours.includes(NaN)) {
+  if (daily_exercises.includes(NaN)) {
     throw new Error('Exercise hours array should only contain numbers');
   } 
-  if (!isNumber(target)) {
+  if (!isNumber(targetInput)) {
     throw new Error('First arguments should be number (target)');
   }
 
   return {
-    exerciseHours,
-    target: Number(target)
+    daily_exercises,
+    target: Number(targetInput)
   };
 }
-
-console.log(calculateExercises());
