@@ -7,9 +7,9 @@ type BmiValuesType = {
   obesity: string;
 };
 
-type BmiArgs = {
-  height: number;
-  weight: number;
+type ParsedBmiArgs = {
+  parsedHeight: number;
+  parsedWeight: number;
 }
 
 const BMI: BmiValuesType = {
@@ -19,21 +19,25 @@ const BMI: BmiValuesType = {
   obesity: 'Obesity',
 };
 
-const calculateBmi = (): string => {
+
+export const calculateBmi = (height: any, weight: any): string => {
   try {
-    const { height, weight } = parseArgs(process.argv)
-    const bmi = weight / Math.pow(height/100, 2)
+    const { parsedHeight, parsedWeight } = parseArgs(height, weight)
+    const bmi = parsedWeight / Math.pow(parsedHeight/100, 2)
     let result: string;
     
     switch (true) {
       case (bmi < 18.5):
-        result =  BMI.underweight;
+        result = BMI.underweight;
+        break;
       case (bmi <= 24.9):
-        result =  BMI.normal;
+        result = BMI.normal;
+        break;
       case (bmi <= 29.9):
-        result =  BMI.overweight;
+        result = BMI.overweight;
+        break;
       default:
-        result =  BMI.obesity;
+        result = BMI.obesity;
     } 
     return result
   } catch (error) {
@@ -41,19 +45,13 @@ const calculateBmi = (): string => {
   }
 }
 
-function parseArgs ( args: string[] ): BmiArgs {
-  if (args.length < 4) throw new Error('Not enough arguments')
-  if (args.length > 4) throw new Error('Too many arguments')
-  const [ , , height, weight ] = args
-
+function parseArgs ( height: string, weight: string ): ParsedBmiArgs {
   if (isNumber(height) && isNumber(weight)) {
     return {
-      height: Number(height),
-      weight: Number(weight)
+      parsedHeight: Number(height),
+      parsedWeight: Number(weight)
     }
   } else {
     throw new Error('One of your arguments was not a number')
   }
 }
-
-console.log(calculateBmi());
