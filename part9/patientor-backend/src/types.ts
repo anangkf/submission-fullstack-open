@@ -55,7 +55,7 @@ export interface Patient {
   ssn: string;
   gender: 'male' | 'female' | 'other';
   occupation: string;
-  entries: Entry[];
+  entries?: Entry[];
 }
 
 export enum Gender {
