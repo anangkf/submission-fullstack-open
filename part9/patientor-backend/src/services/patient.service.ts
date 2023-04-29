@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import patientEntries from '../../data/patients';
-import { NonSensitivePatient, Patient } from '../types';
+import { NonSensitivePatient } from '../types';
+import toNewPatientEntry from '../utils';
 
 const patients: NonSensitivePatient[] = patientEntries.map((patient) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,9 +16,8 @@ export const getPatients = (_req: Request, res: Response) => {
 
 export const addPatient = (req: Request, res: Response) => {
   const id: string = uuid();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
-  const { name, ssn, dateOfBirth, occupation, gender}: Patient = req.body;
-  const newPatient = { id, name, ssn, dateOfBirth, occupation, gender };
+  const body = toNewPatientEntry(req.body);
+  const newPatient = { id, ...body };
 
   patients.push(newPatient);
   res.status(201).json(newPatient);
