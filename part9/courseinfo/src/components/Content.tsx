@@ -1,13 +1,9 @@
 import React from 'react';
 import Part from './Part';
-
-export type CourseParts = {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from '../App';
 
 type ContentProps = {
-  courseParts: CourseParts[]
+  courseParts: CoursePart[]
 }
 
 const Content: React.FC<ContentProps> = ({ courseParts }) => {

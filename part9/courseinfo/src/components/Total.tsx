@@ -1,8 +1,8 @@
 import React from 'react';
-import { CourseParts } from './Content';
+import { CoursePart } from '../App';
 
 type TotalProps = {
-  courseParts: CourseParts[]
+  courseParts: CoursePart[]
 }
 
 const Total:React.FC<TotalProps> = ({ courseParts }) => {
