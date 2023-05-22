@@ -41,42 +41,42 @@ const DiaryForm: React.FC<DiaryFormProps> = ({ addDiary }) => {
         <label htmlFor="visibility">
           visibility
           <span>
-            <input type="radio" name="visibility" id="great" value='great' onChange={handleChange} checked={formData.visibility === 'great'} />
+            <input type="radio" name="visibility" id="great" value='great' onChange={handleChange} checked={visibility === 'great'} />
             <label htmlFor="great">great</label>
           </span>
           <span>
-            <input type="radio" name="visibility" id="good" value='good' onChange={handleChange} checked={formData.visibility === 'good'} />
+            <input type="radio" name="visibility" id="good" value='good' onChange={handleChange} checked={visibility === 'good'} />
             <label htmlFor="good">good</label>
           </span>
           <span>
-            <input type="radio" name="visibility" id="ok" value='ok' onChange={handleChange} checked={formData.visibility === 'ok'} />
+            <input type="radio" name="visibility" id="ok" value='ok' onChange={handleChange} checked={visibility === 'ok'} />
             <label htmlFor="ok">ok</label>
           </span>
           <span>
-            <input type="radio" name="visibility" id="poor" value='poor' onChange={handleChange} checked={formData.visibility === 'poor'} />
+            <input type="radio" name="visibility" id="poor" value='poor' onChange={handleChange} checked={visibility === 'poor'} />
             <label htmlFor="poor">poor</label>
           </span>
         </label><br />
         <label htmlFor="weather">
           weather
           <span>
-            <input type="radio" name="weather" id="sunny" value='sunny' onChange={handleChange} checked={formData.weather === 'sunny'} />
+            <input type="radio" name="weather" id="sunny" value='sunny' onChange={handleChange} checked={weather === 'sunny'} />
             <label htmlFor="sunny">sunny</label>
           </span>
           <span>
-            <input type="radio" name="weather" id="rainy" value='rainy' onChange={handleChange} checked={formData.weather === 'rainy'} />
+            <input type="radio" name="weather" id="rainy" value='rainy' onChange={handleChange} checked={weather === 'rainy'} />
             <label htmlFor="rainy">rainy</label>
           </span>
           <span>
-            <input type="radio" name="weather" id="ok" value='cloudy' onChange={handleChange} checked={formData.weather === 'cloudy'} />
+            <input type="radio" name="weather" id="ok" value='cloudy' onChange={handleChange} checked={weather === 'cloudy'} />
             <label htmlFor="cloudy">cloudy</label>
           </span>
           <span>
-            <input type="radio" name="weather" id="stormy" value='stormy' onChange={handleChange} checked={formData.weather === 'stormy'} />
+            <input type="radio" name="weather" id="stormy" value='stormy' onChange={handleChange} checked={weather === 'stormy'} />
             <label htmlFor="stormy">stormy</label>
           </span>
           <span>
-            <input type="radio" name="weather" id="windy" value='windy' onChange={handleChange} checked={formData.weather === 'windy'} />
+            <input type="radio" name="weather" id="windy" value='windy' onChange={handleChange} checked={weather === 'windy'} />
             <label htmlFor="windy">windy</label>
           </span>
         </label><br />
