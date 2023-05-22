@@ -12,4 +12,10 @@ interface DiaryEntry {
   weather: string;
   comment: string;
 }
+
 type NewDiaryEntry = DiaryEntry<Omit, 'id'>
+
+interface NotifState {
+  type: 'info' | 'error' | 'success';
+  message: string;
+}
