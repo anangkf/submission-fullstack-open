@@ -12,3 +12,4 @@ interface DiaryEntry {
   weather: string;
   comment: string;
 }
+type NewDiaryEntry = DiaryEntry<Omit, 'id'>
