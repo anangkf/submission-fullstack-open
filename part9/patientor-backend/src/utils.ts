@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, NewPatientEntry } from "./types";
+import { Diagnose, Gender, NewPatientEntry } from "./types";
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -56,6 +56,15 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation)
   };
+};
+
+export const parseDiagnosisCodes = (object: unknown): Array<Diagnose['code']> =>  {
+  if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+    // we will just trust the data to be in correct form
+    return [] as Array<Diagnose['code']>;
+  }
+
+  return object.diagnosisCodes as Array<Diagnose['code']>;
 };
 
 export default toNewPatientEntry;

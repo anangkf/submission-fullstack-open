@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import patientEntries from '../../data/patients';
-import { NonSensitivePatient, Patient } from '../types';
-import toNewPatientEntry from '../utils';
+import { Entry, NonSensitivePatient, Patient } from '../types';
+import toNewPatientEntry, { parseDiagnosisCodes } from '../utils';
 
 const patients: NonSensitivePatient[] = patientEntries.map((patient) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,4 +29,27 @@ export const addPatient = (req: Request, res: Response) => {
 
   patients.push(newPatient);
   res.status(201).json(newPatient);
+};
+
+export const addEntry = (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { body } = req;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { description, date, specialist } = body;
+  const patientId = req.params.id;
+
+  const diagnosisCodes = parseDiagnosisCodes(body);
+
+  if(!description || !date || !specialist) {
+    return res.status(400).json("Bad Request");
+  }
+
+  patientEntries.map((patient) => {
+    if (patient.id === patientId ) {
+      patient.entries?.push({ id: uuid(), ...body, diagnosisCodes } as Entry);
+      return patient;
+    }
+    return patient;
+  });
+  return res.status(201).json(body);
 };
