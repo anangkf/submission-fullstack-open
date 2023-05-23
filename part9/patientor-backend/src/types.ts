@@ -12,7 +12,7 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnose['code']>;
 }
 
-export type NonSensitivePatient = Omit<Patient, 'ssn'>;
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id'>;
 
