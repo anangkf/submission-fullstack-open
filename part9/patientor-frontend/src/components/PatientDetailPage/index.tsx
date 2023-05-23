@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import patientService from "../../services/patients";
-import { Patient } from '../../types'
+import diagnosesService from "../../services/diagnoses";
+import { Diagnosis, Patient } from '../../types'
 import { Stack, Typography } from '@mui/material';
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
+import DiagnoseEntries from './DiagnoseEntries';
 
 const INIT_PATIENT_DATA: Patient = {
   id: "",
@@ -19,6 +21,12 @@ const INIT_PATIENT_DATA: Patient = {
 const PatientDetailPage: React.FC = () => {
   const { id } = useParams()
   const [patient, setPatient] = useState(INIT_PATIENT_DATA);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+  useEffect(() => {
+    diagnosesService.getAll()
+      .then((res) => setDiagnoses(res))
+  }, [])
 
   useEffect(() => {
     if(id) {
@@ -45,6 +53,9 @@ const PatientDetailPage: React.FC = () => {
         <Typography>ssn: {patient.ssn}</Typography>
         <Typography>occupation: {patient.occupation}</Typography>
       </Stack>
+
+      <Typography variant='h6' >Entries</Typography>
+      <DiagnoseEntries entries={patient.entries} diagnoses={diagnoses} />
     </Stack>
   )
 }
