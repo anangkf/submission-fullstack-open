@@ -44,12 +44,14 @@ export const addEntry = (req: Request, res: Response) => {
     return res.status(400).json("Bad Request");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const newEntry = { id: uuid(), ...body, diagnosisCodes };
   patientEntries.map((patient) => {
     if (patient.id === patientId ) {
-      patient.entries?.push({ id: uuid(), ...body, diagnosisCodes } as Entry);
+      patient.entries?.push(newEntry as Entry);
       return patient;
     }
     return patient;
   });
-  return res.status(201).json(body);
+  return res.status(201).json(newEntry);
 };

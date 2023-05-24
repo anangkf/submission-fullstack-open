@@ -55,7 +55,7 @@ const PatientDetailPage: React.FC = () => {
       </Stack>
 
       <Typography variant='h6' >Entries</Typography>
-      <DiagnoseEntries entries={patient.entries} diagnoses={diagnoses} />
+      <DiagnoseEntries patient={patient} diagnoses={diagnoses} setPatient={setPatient} />
     </Stack>
   )
 }

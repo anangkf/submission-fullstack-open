@@ -24,7 +24,8 @@ const HealthCheckEntry: React.FC<HealthCheckEntryProps> = ({ entry, diagnoses })
           <Chip label={entry.type} color='success' />
         </Stack>
         <Rating 
-          value={5 - entry.healthCheckRating} 
+          max={4}
+          value={4 - entry.healthCheckRating} 
           sx={{ color: 'red' }} 
           icon={<FavoriteIcon />} 
           emptyIcon={<FavoriteBorderIcon />} 
