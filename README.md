@@ -22,13 +22,13 @@ How much programming experience is needed? It is hard to say, but you should be 
 
 ### Course material
 
-Part 0 -> Fundamentals of Web apps
-Part 1 -> Introduction to React
-Part 2 -> Communicating with server
-Part 3 -> Programming a server with NodeJS and Express
-Part 4 -> Testing Express servers, user administration
-Part 5 -> Testing React apps
-Part 6 -> Advanced state management
-Part 7 -> React router, custom hooks, styling app with CSS and webpack
-Part 8 -> GraphQL
-Part 9 -> TypeScript
+Part 0 -> Fundamentals of Web apps <br/>
+Part 1 -> Introduction to React <br/>
+Part 2 -> Communicating with server <br/>
+Part 3 -> Programming a server with NodeJS and Express <br/>
+Part 4 -> Testing Express servers, user administration <br/>
+Part 5 -> Testing React apps <br/>
+Part 6 -> Advanced state management <br/>
+Part 7 -> React router, custom hooks, styling app with CSS and webpack <br/>
+Part 8 -> GraphQL <br/>
+Part 9 -> TypeScript <br/>
